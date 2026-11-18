@@ -461,7 +461,7 @@ describe('producao quadrupla', () => {
   it('avisa no motivo da sessao', () => {
     const plan = planSession(quatro(), 60, { includeProduction: true });
 
-    expect(plan.rationale).toContain('producao quadrupla');
+    expect(plan.rationale).toContain('producao cruzada');
   });
 });
 

@@ -5,12 +5,15 @@ const prisma = new PrismaClient();
 
 const LANGUAGES = [
   { code: 'en', name: 'English', flag: 'GB' },
-  { code: 'es', name: 'Espanol', flag: 'ES' },
   { code: 'de', name: 'Deutsch', flag: 'DE' },
-  { code: 'ru', name: 'Russkiy', flag: 'RU' },
 ];
 
-/** Os idiomas em que TODO conceito precisa existir. */
+/**
+ * Os idiomas em que TODO conceito precisa existir.
+ *
+ * Os conceitos abaixo ainda trazem `es` e `ru`: e conteudo de quando o produto
+ * ensinava quatro idiomas. Fica escrito, mas so os idiomas ativos sao semeados.
+ */
 const STUDY_CODES = LANGUAGES.map((l) => l.code);
 
 const ACHIEVEMENTS = [
@@ -328,7 +331,7 @@ async function main() {
   }
 
   // Um conceito incompleto quebraria a promessa do produto: se ele entra na
-  // sessao, entra nos quatro idiomas. Melhor falhar o seed do que semear um
+  // sessao, entra em todos os idiomas. Melhor falhar o seed do que semear um
   // conceito manco, que depois viraria uma revisao so em ingles.
   for (const concept of CONCEPTS) {
     const missing = STUDY_CODES.filter((code) => !concept.entries[code]);
@@ -349,9 +352,10 @@ async function main() {
       update: { gloss: seed.gloss, note: seed.note, level: seed.level },
     });
 
-    for (const [code, entry] of Object.entries(seed.entries)) {
+    for (const code of STUDY_CODES) {
+      const entry = seed.entries[code];
       const id = languageId.get(code);
-      if (!id) continue;
+      if (!entry || !id) continue;
 
       await prisma.vocabulary.upsert({
         where: { languageId_term: { languageId: id, term: entry.term } },

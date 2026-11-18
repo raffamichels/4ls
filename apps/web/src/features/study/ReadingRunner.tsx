@@ -226,7 +226,7 @@ function Passage({
         )}
 
         <div className="card">
-          <p className="section-title mb-1">Os quatro lado a lado</p>
+          <p className="section-title mb-1">Os dois lado a lado</p>
           <p className="text-sm leading-relaxed text-wolf">{lesson.contrast}</p>
         </div>
       </div>
@@ -304,7 +304,7 @@ function Comprehension({
               ? `Esta história ainda volta em mais ${missing} ${
                   missing === 1 ? 'idioma' : 'idiomas'
                 } — e aí você já sabe o que ela diz.`
-              : 'Você leu esta história nos quatro idiomas.'}
+              : 'Você leu esta história nos dois idiomas.'}
           </p>
         </div>
         <LessonFooter tone={score >= 70 ? 'correct' : 'neutral'} title={`${score}% de acerto`}>

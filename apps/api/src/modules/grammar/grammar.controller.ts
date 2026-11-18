@@ -2,7 +2,7 @@ import { BadRequestException, Body, Controller, Get, Param, Post, Query, UseGuar
 import { IsBoolean, IsInt, IsOptional, IsString, Min } from 'class-validator';
 import { CurrentUser } from '../../common/current-user.decorator';
 import { JwtAuthGuard } from '../../common/jwt-auth.guard';
-import { isLang, Lang, STUDY_LANGUAGES } from './contrast-catalog';
+import { ACTIVE_LANGUAGES, isLang, Lang } from './contrast-catalog';
 import { GrammarService } from './grammar.service';
 
 class RecordDto {
@@ -72,9 +72,9 @@ export class GrammarController {
  * evita que o service tenha de repetir a checagem em todo metodo.
  */
 function target(code: string | undefined): Lang {
-  if (!code || !isLang(code) || !STUDY_LANGUAGES.includes(code)) {
+  if (!code || !isLang(code) || !ACTIVE_LANGUAGES.includes(code)) {
     throw new BadRequestException(
-      `Idioma invalido. Use um destes: ${STUDY_LANGUAGES.join(', ')}.`,
+      `Idioma invalido. Use um destes: ${ACTIVE_LANGUAGES.join(', ')}.`,
     );
   }
   return code;

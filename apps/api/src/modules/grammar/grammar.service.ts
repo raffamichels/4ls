@@ -3,6 +3,7 @@ import { AiRouterService } from '../../infrastructure/ai/ai-router.service';
 import { contrastDrillPrompt, ContrastContext } from '../../infrastructure/ai/prompts';
 import { PrismaService } from '../../infrastructure/database/prisma.service';
 import {
+  ACTIVE_LANGUAGES,
   ContrastTopic,
   findTopic,
   Lang,
@@ -107,7 +108,8 @@ export class GrammarService {
     const order: Lang[] = [target];
     if (support.ally) order.push(support.ally);
     if (support.contrast) order.push(support.contrast);
-    for (const lang of ['pt', 'en', 'es', 'de', 'ru'] as Lang[]) {
+    // Espanhol e russo so entram como aliado ou contraste, nunca como coluna extra.
+    for (const lang of ['pt', ...ACTIVE_LANGUAGES] as Lang[]) {
       if (!order.includes(lang)) order.push(lang);
     }
 
@@ -236,8 +238,10 @@ export class GrammarService {
     if (!support.contrast) return drills;
 
     const targetName = LANG_NAME[target];
-    const options = (['pt', 'en', 'es', 'de', 'ru'] as Lang[])
-      .filter((l) => l !== target)
+    // Idiomas ativos e portugues; espanhol ou russo so quando sao a resposta.
+    const candidates = ['pt', ...ACTIVE_LANGUAGES, support.ally, support.contrast] as Array<Lang | null>;
+    const options = [...new Set(candidates)]
+      .filter((l): l is Lang => l !== null && l !== target)
       .map((l) => LANG_NAME[l]);
 
     const alignment: Drill = support.ally

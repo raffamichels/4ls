@@ -19,9 +19,7 @@ import { TopicSummary } from './types';
  */
 const LANGUAGES = [
   { code: 'en', label: 'English', short: 'EN' },
-  { code: 'es', label: 'Español', short: 'ES' },
   { code: 'de', label: 'Deutsch', short: 'DE' },
-  { code: 'ru', label: 'Русский', short: 'RU' },
 ];
 
 /**

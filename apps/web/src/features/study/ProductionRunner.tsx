@@ -146,7 +146,7 @@ export function ProductionRunner({
           {trail}
 
           {/*
-            Aqui as quatro ficam juntas de novo, e agora a comparacao rende:
+            Aqui as duas ficam juntas de novo, e agora a comparacao rende:
             todas escritas, lado a lado, antes de mandar corrigir.
           */}
           {targets.map((t) => {
@@ -179,7 +179,7 @@ export function ProductionRunner({
         <LessonFooter
           detail={
             written.length === targets.length
-              ? 'As quatro escritas. A correção compara uma com a outra.'
+              ? 'As duas escritas. A correção compara uma com a outra.'
               : `${written.length} de ${targets.length} escritas. Pode enviar incompleto.`
           }
         >
@@ -248,7 +248,7 @@ export function ProductionRunner({
           <SkipButton onSkip={onSkip} />
         )}
         <button className="btn-primary flex-1 px-10 sm:flex-none" onClick={() => setStep((i) => i + 1)}>
-          {step === targets.length - 1 ? 'Revisar as quatro' : 'Próximo idioma'}
+          {step === targets.length - 1 ? 'Revisar as duas' : 'Próximo idioma'}
         </button>
       </LessonFooter>
     </>
@@ -279,7 +279,7 @@ function Result({
             este exercicio tem de proprio, e ela some se ficar no rodape. */}
         {evaluation.insight && (
           <div className="card border-humpback bg-humpback-soft">
-            <p className="section-title mb-1.5">Olhando as quatro juntas</p>
+            <p className="section-title mb-1.5">Olhando as duas juntas</p>
             <p className="text-sm leading-relaxed text-humpback-dark">{evaluation.insight}</p>
           </div>
         )}

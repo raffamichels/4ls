@@ -422,7 +422,9 @@ export class ConceptsService {
       where: {
         userId,
         status: { not: VocabStatus.MASTERED },
-        vocabulary: { conceptId: { not: null } },
+        // So os idiomas que ele estuda decidem a ordem: um card vencido de um
+        // idioma que saiu do estudo nao deve puxar o conceito para a frente.
+        vocabulary: { conceptId: { not: null }, language: { code: { in: codes } } },
       },
       select: { nextReview: true, vocabulary: { select: { conceptId: true } } },
       orderBy: { nextReview: 'asc' },
@@ -669,7 +671,7 @@ export class ConceptsService {
   async productionMission(userId: string) {
     const profile = await this.profile(userId);
     if (profile.length < 2) {
-      throw new NotFoundException('A producao quadrupla precisa de pelo menos dois idiomas.');
+      throw new NotFoundException('A producao cruzada precisa de pelo menos dois idiomas.');
     }
 
     const ready = await this.prisma.conceptProgress.findMany({

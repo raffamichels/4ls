@@ -32,7 +32,7 @@ export function RegisterPage() {
       <div className="text-center">
         <h1 className="font-serif text-3xl font-semibold tracking-tight text-eel">4L</h1>
         <p className="mt-1 font-mono text-xs text-hare">diário de bordo</p>
-        <p className="mt-2 text-sm text-wolf">Sua conta já começa com inglês, espanhol, alemão e russo.</p>
+        <p className="mt-2 text-sm text-wolf">Sua conta já começa com inglês e alemão.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="card w-full max-w-sm space-y-4">

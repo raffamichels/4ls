@@ -308,7 +308,7 @@ export function CanDoCompareRunner({
             else setStep((i) => i + 1);
           }}
         >
-          {step === targets.length - 1 ? 'Ver as quatro' : 'Próximo idioma'}
+          {step === targets.length - 1 ? 'Ver as duas' : 'Próximo idioma'}
         </button>
       </LessonFooter>
     </>

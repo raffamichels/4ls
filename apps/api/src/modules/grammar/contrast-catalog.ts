@@ -23,6 +23,16 @@ export type Lang = 'pt' | 'en' | 'es' | 'de' | 'ru';
 /** Os quatro que o aluno estuda. O portugues e a lingua materna, o apoio. */
 export const STUDY_LANGUAGES: readonly Lang[] = ['en', 'es', 'de', 'ru'] as const;
 
+/**
+ * Os idiomas que o produto ensina hoje.
+ *
+ * O catalogo continua escrito nos quatro (STUDY_LANGUAGES) -- o conteudo de
+ * espanhol e russo fica guardado --, mas so estes viram alvo de estudo e so
+ * eles aparecem na comparacao, junto com o portugues. Espanhol e russo so
+ * voltam a tela quando nenhum idioma ativo da o contraste de um topico.
+ */
+export const ACTIVE_LANGUAGES: readonly Lang[] = ['en', 'de'] as const;
+
 export const LANG_NAME: Record<Lang, string> = {
   pt: 'português',
   en: 'inglês',
@@ -892,7 +902,8 @@ export interface Support {
 
 export function supportFor(topic: ContrastTopic, target: Lang): Support {
   const own = topic.groups.find((g) => g.includes(target)) ?? [target];
-  const ranked = ([...STUDY_LANGUAGES, 'pt'] as Lang[]).filter((l) => l !== target);
+  const retired = STUDY_LANGUAGES.filter((l) => !ACTIVE_LANGUAGES.includes(l));
+  const ranked = ([...ACTIVE_LANGUAGES, 'pt', ...retired] as Lang[]).filter((l) => l !== target);
 
   return {
     ally: ranked.find((l) => own.includes(l)) ?? null,

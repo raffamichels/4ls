@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  ACTIVE_LANGUAGES,
   CONTRAST_TOPICS,
   Lang,
   STUDY_LANGUAGES,
@@ -62,13 +63,27 @@ describe('supportFor', () => {
     expect(supportFor(topic, 'de').ally).toBe('en');
   });
 
-  it('cai no portugues quando nenhum idioma de estudo confirma a intuicao', () => {
-    // Artigos: portugues, espanhol e alemao usam artigo; o ingles nao. Como o
-    // espanhol vem antes na ordem, ele e o aliado; o portugues so entraria se
-    // o espanhol nao servisse.
+  it('cai no portugues quando nenhum idioma ativo confirma a intuicao', () => {
+    // Artigos: portugues, espanhol e alemao usam artigo; o ingles nao. O
+    // espanhol saiu do estudo, entao o portugues vem antes dele: so idioma
+    // aposentado nao e aliado enquanto a lingua materna servir.
     const topic = CONTRAST_TOPICS.find((t) => t.id === 'articles-usage')!;
-    expect(supportFor(topic, 'de').ally).toBe('es');
+    expect(supportFor(topic, 'de').ally).toBe('pt');
     expect(supportFor(topic, 'de').contrast).toBe('en');
+  });
+
+  it('so recorre a espanhol ou russo quando nenhum ativo da o contraste', () => {
+    for (const topic of CONTRAST_TOPICS) {
+      for (const target of topic.targets.filter((t) => ACTIVE_LANGUAGES.includes(t))) {
+        const { ally, contrast } = supportFor(topic, target);
+        const own = topic.groups.find((g) => g.includes(target)) ?? [target];
+        const activeContrast = [...ACTIVE_LANGUAGES, 'pt' as const].some(
+          (l) => l !== target && !own.includes(l),
+        );
+        if (activeContrast) expect(['en', 'de', 'pt'], `${topic.id}/${target}`).toContain(contrast);
+        if (ally && own.includes('pt')) expect(['en', 'de', 'pt']).toContain(ally);
+      }
+    }
   });
 
   it('devolve aliado nulo quando o alvo esta sozinho no grupo', () => {

@@ -7,9 +7,7 @@ import { CaptureResult } from '../../types';
 
 const LANGUAGES = [
   { code: 'en', label: 'English' },
-  { code: 'es', label: 'Español' },
   { code: 'de', label: 'Deutsch' },
-  { code: 'ru', label: 'Русский' },
 ];
 
 /**
@@ -86,7 +84,7 @@ ${data.text}` : data.text));
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="section-title">Aprender de um texto</h2>
-          <p className="text-xs text-wolf">Cole algo que você leu. O vocabulário entra nos quatro idiomas.</p>
+          <p className="text-xs text-wolf">Cole algo que você leu. O vocabulário entra nos dois idiomas.</p>
         </div>
         <button
           className="btn-plain px-2 text-xs"

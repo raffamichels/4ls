@@ -168,7 +168,7 @@ export class CanDoService {
     }
 
     throw new ServiceUnavailableException(
-      `Nao consegui montar a aula de "${ideal.question}" nos quatro idiomas agora. ` +
+      `Nao consegui montar a aula de "${ideal.question}" nos idiomas agora. ` +
         'Tente de novo em um minuto.',
     );
   }
@@ -437,7 +437,7 @@ export class CanDoService {
     );
 
     if (sentences.length === 0) {
-      throw new Error('A IA nao devolveu nenhuma frase utilizavel nos quatro idiomas.');
+      throw new Error('A IA nao devolveu nenhuma frase utilizavel nos idiomas.');
     }
 
     const discarded = (result.sentences ?? []).length - sentences.length;

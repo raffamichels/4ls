@@ -164,7 +164,7 @@ export function VocabularyRunner({
       </div>
 
       <LessonFooter
-        detail="Os quatro idiomas entram juntos — é assim que um segura a memória do outro."
+        detail="Os dois idiomas entram juntos — é assim que um segura a memória do outro."
       >
         <SkipButton onSkip={onSkip} />
         <button
@@ -237,7 +237,7 @@ function CrossCheck({
           <p className="text-sm text-wolf">
             {score >= 70
               ? 'A rede entre os idiomas está firmando.'
-              : 'Esses conceitos voltam amanhã, nos quatro idiomas.'}
+              : 'Esses conceitos voltam amanhã, nos dois idiomas.'}
           </p>
         </div>
         <LessonFooter tone={score >= 70 ? 'correct' : 'neutral'} title={`${score}% de acerto`}>
@@ -328,7 +328,7 @@ function CrossCheck({
         title={checked ? (isCorrect ? 'Isso mesmo' : `Resposta certa: ${question.answer}`) : undefined}
         detail={
           checked
-            ? `"${question.gloss}" — o mesmo conceito nos quatro idiomas.`
+            ? `"${question.gloss}" — o mesmo conceito nos dois idiomas.`
             : 'Toque na alternativa para responder.'
         }
       >

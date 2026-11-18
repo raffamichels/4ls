@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CefrLevel, VocabStatus } from '@prisma/client';
 import { PrismaService } from '../../infrastructure/database/prisma.service';
 import { ConceptsService } from '../concepts/concepts.service';
+import { enrolledLanguage } from '../review/review.service';
 
 export interface AddVocabularyInput {
   languageCode: string;
@@ -25,7 +26,7 @@ export class VocabularyService {
       where: {
         userId,
         ...(status ? { status } : {}),
-        ...(languageCode ? { vocabulary: { language: { code: languageCode } } } : {}),
+        vocabulary: enrolledLanguage(userId, languageCode),
       },
       include: { vocabulary: { include: { language: true, concept: true } } },
       orderBy: { nextReview: 'asc' },
@@ -56,7 +57,7 @@ export class VocabularyService {
   /** Contagem por idioma e status -- usada no dashboard e no analytics. */
   async stats(userId: string) {
     const rows = await this.prisma.userVocabulary.findMany({
-      where: { userId },
+      where: { userId, vocabulary: enrolledLanguage(userId) },
       select: {
         status: true,
         vocabulary: { select: { language: { select: { code: true } } } },

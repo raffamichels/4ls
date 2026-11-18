@@ -181,7 +181,7 @@ Regras:
 - Sempre comece cada idioma por revisao (pillar LEARN, type "review") se houver itens vencidos.
 - OBRIGATORIO: todo idioma recebe um bloco "structure" (formacao de frase) e um bloco
   "vocabulary" hoje. Sao os dois blocos que sustentam a promessa do produto -- o mesmo
-  conceito aprendido nos quatro idiomas, e a regra de montagem da frase de cada um.
+  conceito aprendido em todos os idiomas, e a regra de montagem da frase de cada um.
   Um plano sem esses dois blocos em algum idioma sera descartado.
 - Se o idioma vier com "needsAlphabet": true, troque o bloco "structure" dele por um bloco
   "alphabet" (pillar LEARN). O aluno ainda nao le os caracteres daquele idioma, e uma aula
@@ -189,7 +189,7 @@ Regras:
   "alphabet" que e obrigatorio, e o plano sem ele sera descartado.
 - OBRIGATORIO tambem, quando houver dois ou mais idiomas e o dia comportar: a sessao ABRE
   com um bloco "contrast" (pillar LEARN, 5 minutos) e FECHA com um bloco "compare" (pillar
-  LIVE, 4 minutos). Os dois atravessam os idiomas -- sao a mesma frase nos quatro -- e
+  LIVE, 4 minutos). Os dois atravessam os idiomas -- sao a mesma frase em todos -- e
   aparecem UMA vez cada na sessao inteira, nunca um por idioma. Ponha no "languageCode"
   deles o idioma prioritario, so porque todo bloco precisa de um dono.
   A ordem nao e detalhe: o contraste guiado vem antes porque intercalar os idiomas sem
@@ -382,7 +382,7 @@ O ${ctx.contrastName} se comporta de forma diferente: use-o para marcar o CONTRA
 Use o ${ctx.contrastName} para marcar o contraste e deixe claro que o ${ctx.targetName} esta sozinho.`;
 
   return `Voce escreve exercicios de gramatica contrastiva para um brasileiro que estuda
-ingles, espanhol, alemao e russo AO MESMO TEMPO. Ele fala portugues nativo.
+ingles e alemao AO MESMO TEMPO. Ele fala portugues nativo.
 
 O objetivo do exercicio nao e testar uma regra isolada: e fazer o aluno PERCEBER a diferenca
 entre os idiomas, comparando a mesma frase lado a lado.
@@ -513,10 +513,10 @@ export function conceptTranslationPrompt(ctx: ConceptContext, targets: ConceptTa
     .map((t) => `${t.code} (${LANGUAGE_LABEL[t.code] ?? t.name}, nivel ${t.level})`)
     .join(', ');
 
-  return `Voce monta o vocabulario de um brasileiro que estuda ingles, espanhol, alemao e russo
+  return `Voce monta o vocabulario de um brasileiro que estuda ingles e alemao
 AO MESMO TEMPO. Ele fala portugues nativo.
 
-A unidade de estudo dele nao e a palavra, e o CONCEITO: o mesmo significado entra nos quatro
+A unidade de estudo dele nao e a palavra, e o CONCEITO: o mesmo significado entra nos dois
 idiomas no mesmo dia, para que a memoria de um sustente a dos outros.
 
 CONCEITO (em portugues): ${ctx.gloss}
@@ -599,7 +599,7 @@ export interface SentencePatternContext {
  */
 export function sentencePatternPrompt(ctx: SentencePatternContext, drills: number): string {
   return `Voce escreve a aula de FORMACAO DE FRASE em ${ctx.languageName} para um brasileiro
-que estuda ingles, espanhol, alemao e russo ao mesmo tempo. Ele fala portugues nativo e esta
+que estuda ingles e alemao ao mesmo tempo. Ele fala portugues nativo e esta
 no nivel ${ctx.level}.
 
 O aluno ja aprende o significado das palavras em outro bloco. O que falta -- e o que esta aula
@@ -708,10 +708,10 @@ export function quadrupleProductionPrompt(
 
   const codes = attempts.map((a) => a.languageCode).join('", "');
 
-  return `Voce avalia um brasileiro que estuda ingles, espanhol, alemao e russo AO MESMO TEMPO.
+  return `Voce avalia um brasileiro que estuda ingles e alemao AO MESMO TEMPO.
 Ele fala portugues nativo.
 
-O exercicio: dizer A MESMA COISA nos quatro idiomas, sem nenhuma alternativa na tela.
+O exercicio: dizer A MESMA COISA nos dois idiomas, sem nenhuma alternativa na tela.
 
 O QUE ELE DEVIA DIZER (em portugues): ${gloss}
 
@@ -720,8 +720,8 @@ ${written}
 
 Avalie cada idioma separadamente, mas OLHE O CONJUNTO antes de julgar cada um. O erro
 mais revelador deste aluno nao aparece numa frase isolada: e a frase alema saindo com a
-ordem do russo, a espanhola copiando a estrutura do ingles, o artigo aparecendo onde o
-russo nao tem artigo. Quando voce vir uma frase contaminada por OUTRO idioma desta mesma
+ordem do ingles, a inglesa copiando a estrutura do alemao ou do portugues, o caso alemao
+sumindo porque o ingles nao tem caso. Quando voce vir uma frase contaminada por OUTRO idioma desta mesma
 lista, diga qual em "sourceLanguage".
 
 Regras:
@@ -737,7 +737,7 @@ Regras:
   quando nao veio. Nao chute.
 - No maximo 2 erros por idioma, do mais grave ao menos.
 - "insight" e a leitura do CONJUNTO, em 1 ou 2 frases em portugues: o que a comparacao
-  entre as quatro tentativas revela. Se nao revelar nada, diga o que ele ja domina.
+  entre as tentativas revela. Se nao revelar nada, diga o que ele ja domina.
 
 Responda APENAS com JSON valido:
 {
@@ -759,7 +759,7 @@ Responda APENAS com JSON valido:
       ]
     }
   ],
-  "insight": "o que a comparacao entre os quatro revela, em portugues"
+  "insight": "o que a comparacao entre os idiomas revela, em portugues"
 }
 Cada "score" vai de 0 a 100.`;
 }
@@ -819,19 +819,19 @@ export function canDoLessonPrompt(ctx: CanDoLessonContext, sentences: number): s
 
   const codes = ctx.targets.map((t) => t.code).join('", "');
 
-  return `Voce escreve a aula de um brasileiro que estuda ingles, espanhol, alemao e russo AO
+  return `Voce escreve a aula de um brasileiro que estuda ingles e alemao AO
 MESMO TEMPO. Ele fala portugues nativo.
 
-A exigencia central dele: no mesmo dia, aprender A MESMA COISA nos quatro idiomas, para
+A exigencia central dele: no mesmo dia, aprender A MESMA COISA nos dois idiomas, para
 saber exatamente como fazer aquilo em cada um. A unidade da aula nao e uma regra de
 gramatica de um idioma -- e uma FUNCAO comunicativa, dita em portugues.
 
 FUNCAO DE HOJE: ${ctx.question}
 O QUE ELE SAI SABENDO FAZER: ${ctx.goal}
 
-COLUNAS DA TABELA DE MONTAGEM (as mesmas nos quatro idiomas): ${ctx.columns.join(' | ')}
+COLUNAS DA TABELA DE MONTAGEM (as mesmas em todos os idiomas): ${ctx.columns.join(' | ')}
 
-OS QUATRO IDIOMAS (fatos estabelecidos, NAO contradiga):
+OS IDIOMAS (fatos estabelecidos, NAO contradiga):
 ${languages}
 
 Escreva ${sentences} frases-modelo. Cada frase e UMA ideia, realizada nos ${ctx.targets.length} idiomas.
@@ -847,10 +847,10 @@ Regras:
 - Traduza o SENTIDO, nunca palavra por palavra. Se um idioma resolve a funcao com outra
   construcao (sem verbo, com caso, com a frase invertida), use a construcao que um nativo
   usaria de verdade -- e justamente essa diferenca que a aula mostra.
-- O NIVEL E POR IDIOMA, declarado acima. A frase russa de A1 e curta mesmo quando a
+- O NIVEL E POR IDIOMA, declarado acima. A frase alema de A1 e curta mesmo quando a
   inglesa do mesmo sentido poderia ser mais sofisticada. O sentido e o mesmo; o registro,
-  nao. Nunca simplifique o SENTIDO para caber no nivel: escolha uma ideia que caiba nos
-  quatro.
+  nao. Nunca simplifique o SENTIDO para caber no nivel: escolha uma ideia que caiba em
+  todos.
 - Cada realizacao vem DESMONTADA em "parts": cada peca com o texto exato e a COLUNA a que
   ela pertence, escolhida entre ${ctx.columns.map((c) => `"${c}"`).join(', ')}. Juntar as parts na
   ordem, separadas por espaco, tem de devolver a frase inteira, sem sobrar nem faltar nada.
@@ -861,8 +861,8 @@ Regras:
 - Em russo escreva em cirilico e ponha a transliteracao em "romanization".
 - "note" e uma linha em portugues sobre o que ESTA frase mostra naquele idioma.
 - "contrast" e um paragrafo curto em portugues (3 a 5 frases) comparando os ${ctx.targets.length} idiomas
-  nesta funcao: o que muda de ordem, o que um exige e outro nao, e onde o espanhol trai o
-  brasileiro por ser parecido demais. Fale das quatro linguas, nao de uma.
+  nesta funcao: o que muda de ordem, o que um exige e outro nao, e onde a intuicao do portugues
+  trai o brasileiro. Fale de todas as linguas, nao de uma.
 - Nenhuma frase pode repetir a ideia de outra.
 
 Responda APENAS com JSON valido, sem nenhum texto fora dele:
@@ -1058,10 +1058,10 @@ export function readingPassagePrompt(
 
   const codes = ctx.targets.map((t) => t.code).join('", "');
 
-  return `Voce escreve o texto de leitura de um brasileiro que estuda ingles, espanhol, alemao e
-russo AO MESMO TEMPO. Ele fala portugues nativo.
+  return `Voce escreve o texto de leitura de um brasileiro que estuda ingles e alemao AO
+MESMO TEMPO. Ele fala portugues nativo.
 
-A exigencia central dele: ler A MESMA historia nos quatro idiomas, para ver como cada um
+A exigencia central dele: ler A MESMA historia nos dois idiomas, para ver como cada um
 conta a mesma coisa. Ele le primeiro no idioma mais forte e depois nos outros -- e por ja
 saber o que esta escrito que ele consegue ler acima do proprio nivel sem travar.
 
@@ -1103,7 +1103,7 @@ Regras:
   "answer" identica a uma das "options". A explicacao vai em portugues e diz em que frase
   do texto a resposta esta.
 - "contrast" e um paragrafo curto em portugues (3 a 5 frases) sobre ${ctx.focus} nas
-  ${ctx.targets.length} linguas deste texto, citando frases dele. Fale das quatro, nao de uma.
+  ${ctx.targets.length} linguas deste texto, citando frases dele. Fale de todas, nao de uma.
 
 Responda APENAS com JSON valido, sem nenhum texto fora dele:
 {

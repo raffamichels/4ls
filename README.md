@@ -1,6 +1,8 @@
 # Raffael 4L
 
-Sistema operacional pessoal para aquisição de idiomas — inglês, espanhol, alemão e russo em 1 hora por dia.
+Sistema operacional pessoal para aquisição de idiomas — inglês e alemão em 1 hora por dia.
+
+> **Espanhol e russo saíram do estudo.** O produto nasceu com quatro idiomas, e boa parte deste documento ainda descreve o design daquela época. Hoje cadastro, seed e sessão usam só inglês e alemão. O conteúdo escrito de espanhol e russo continua nos catálogos, e o histórico de quem os estudou continua no banco — só a matrícula foi removida (`npm run db:retire-languages`).
 
 O produto responde a uma única pergunta ao abrir: **"o que eu deveria estudar agora?"**. O dashboard já entrega a sessão pronta, montada a partir do seu desempenho.
 
@@ -34,6 +36,7 @@ rodar duas vezes e seguro e continua de onde parou.
 ```bash
 npm run content:warm -w @4l/api                  # prepara o conteudo de estudo antes da hora
 npm run db:enroll-languages                      # matricula usuarios antigos num idioma novo
+npm run db:retire-languages -- --dry-run         # desmatricula de idiomas que sairam (com backup)
 npm run db:merge-concepts -- <origem> <destino>   # funde dois conceitos que sao o mesmo significado
 npm run db:rewind -- 1                           # empurra as sessoes um dia para tras (dev)
 ```
@@ -66,7 +69,7 @@ resolve sozinho -- quando a IA gera para um conceito um termo que ja e de outro,
 os dois quase sempre sao o mesmo significado, mas "pasta" de arquivo e "pasta" de
 comer provam que nem sempre. Quem decide e uma pessoa olhando.
 
-Abra http://localhost:5173 e crie uma conta. Ela já nasce com os quatro idiomas configurados (inglês B2, espanhol A2, alemão A1, russo A1) e 22 conceitos — 88 termos — prontos para revisar.
+Abra http://localhost:5173 e crie uma conta. Ela já nasce com os dois idiomas configurados (inglês B2, alemão A1) e 22 conceitos — 44 termos — prontos para revisar.
 
 ### Pré-requisitos
 
@@ -369,21 +372,21 @@ Nenhum módulo fala com MiMo ou OpenRouter diretamente. Tarefas complexas (avali
 
 ## O que já funciona
 
-- Autenticação JWT, com matrícula automática nos 4 idiomas e conceitos iniciais
+- Autenticação JWT, com matrícula automática em inglês e alemão e conceitos iniciais
 - Dashboard com sessão pronta, streak, XP, competências CEFR e erros recorrentes por idioma
 - Sessão de estudo com cronômetro, flashcards SRS, exercícios gerados por IA e blocos autoavaliados
-- **Conceitos nos quatro idiomas de uma vez** — o bloco de vocabulário mostra o mesmo significado em inglês, espanhol, alemão e russo lado a lado, e o teste é cruzado entre idiomas de propósito
+- **Conceitos nos dois idiomas de uma vez** — o bloco de vocabulário mostra o mesmo significado em inglês e alemão lado a lado, e o teste é cruzado entre idiomas de propósito
 - **Andaime na revisão** — quando o significado já firmou em outro idioma, o card fraco oferece a palavra que você domina como dica, em vez de reensinar o conceito do zero
-- **Produção quádrupla semanal** — escrever a mesma frase nos quatro idiomas, sem alternativas, com a correção olhando as quatro juntas
+- **Produção cruzada semanal** — escrever a mesma frase nos dois idiomas, sem alternativas, com a correção olhando as duas juntas
 - **Interferência com culpado nomeado** — o erro registra de qual idioma veio, e a tela de Estruturas mostra o contraste que resolve aquele par
-- **Captura por foto** — fotografe um cardápio, uma placa ou uma bula; o texto é lido, você confere, e o vocabulário entra como conceito nos quatro idiomas
+- **Captura por foto** — fotografe um cardápio, uma placa ou uma bula; o texto é lido, você confere, e o vocabulário entra como conceito nos dois idiomas
 - **Tutor de mãos livres** — conversa por voz sem tocar na tela, na mesma conversa do tutor escrito: os erros continuam indo para o perfil e ficam legíveis depois
 - **Shadowing** — o app fala, você repete na hora, e a correção é palavra a palavra contra a frase original; sem IA, porque o gabarito é a própria frase
 - **Armadilhas cruzadas** — pares mínimos entre idiomas, em que a alternativa errada é a frase que sai quando outra língua vaza; a maior parte vem dos seus próprios erros, e acertar várias vezes **fecha** o erro
-- **Drill de casos** — em alemão e russo, a tabela viva de uma palavra que você já conhece, e a frase com a forma escondida; os distratores são as outras formas da mesma palavra
+- **Drill de casos** — em alemão, a tabela viva de uma palavra que você já conhece, e a frase com a forma escondida; os distratores são as outras formas da mesma palavra
 - **Chefe de fase** — o exame que sobe o idioma de nível: abre quando o desempenho chega lá, cobra três rodadas com gabarito e, se você passar, todo o conteúdo daquele idioma sobe junto
-- **Leitura paralela** — a MESMA história lida nos quatro idiomas, alinhada frase a frase: tocar numa frase mostra o que ela diz e como ela fica nos outros três
-- **Captura de texto** — cole um artigo e o vocabulário dele entra como conceito, já nos quatro idiomas
+- **Leitura paralela** — a MESMA história lida nos dois idiomas, alinhada frase a frase: tocar numa frase mostra o que ela diz e como ela fica no outro
+- **Captura de texto** — cole um artigo e o vocabulário dele entra como conceito, já nos dois idiomas
 - **Formação de frase por idioma** — bloco diário com a fórmula, os passos de montagem, exemplos fatiados em constituintes rotulados e exercícios de ordenação
 - Vocabulário em contexto (exemplo + tradução do exemplo, nunca "palavra = tradução")
 - **Áudio em toda parte**: botão de ouvir no flashcard, no vocabulário, no enunciado do exercício e na fala do tutor
@@ -429,8 +432,8 @@ POST /api/study/sessions/:id/complete
 GET  /api/review/due                     itens vencidos
 POST /api/review/:id/grade               again | hard | good | easy
 GET  /api/vocabulary                     POST /api/vocabulary
-GET  /api/concepts/lesson                os conceitos de hoje, nos 4 idiomas
-GET  /api/concepts/coverage              quantos já existem nos 4 idiomas
+GET  /api/concepts/lesson                os conceitos de hoje, nos idiomas do aluno
+GET  /api/concepts/coverage              quantos já existem em todos os idiomas do aluno
 POST /api/concepts/learn                 aprende um termo — entra nos 4 de uma vez
 GET  /api/structure/lesson               a aula de formação de frase do dia
 POST /api/structure/record               resultado da rodada de montagem

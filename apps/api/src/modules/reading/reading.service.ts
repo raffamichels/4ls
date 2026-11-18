@@ -384,7 +384,7 @@ export class ReadingService {
     }
 
     throw new ServiceUnavailableException(
-      `Nao consegui montar o texto "${ideal.title}" nos quatro idiomas agora. ` +
+      `Nao consegui montar o texto "${ideal.title}" nos idiomas agora. ` +
         'Tente de novo em um minuto.',
     );
   }

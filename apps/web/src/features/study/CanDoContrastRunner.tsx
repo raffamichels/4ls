@@ -103,7 +103,7 @@ export function CanDoContrastRunner({
       <div className="card flex min-h-[16rem] flex-col items-center justify-center gap-3 text-center">
         <p className="font-serif text-lg font-semibold text-eel">Abrindo a função de hoje...</p>
         <p className="max-w-sm text-sm text-wolf">
-          Uma só coisa para dizer, e as quatro maneiras de dizer.
+          Uma só coisa para dizer, e as maneiras de dizer em cada idioma.
         </p>
       </div>
     );
@@ -147,7 +147,7 @@ export function CanDoContrastRunner({
             abertura do dia{canDo.level ? `, nível ${canDo.level}` : ''}
           </p>
           {/* A funcao vem em portugues e vem primeiro: e o unico enunciado que
-              os quatro idiomas compartilham, e sem ele a tela vira uma lista
+              os idiomas compartilham, e sem ele a tela vira uma lista
               de frases soltas. */}
           <h2 className="font-serif text-2xl font-semibold leading-tight text-eel">
             {canDo.question}
@@ -158,13 +158,13 @@ export function CanDoContrastRunner({
         {ideas.length === 0 ? (
           <div className="card">
             <p className="text-sm text-wolf">
-              A função de hoje ainda não tem as frases dos quatro idiomas prontas.
+              A função de hoje ainda não tem as frases dos idiomas prontas.
             </p>
           </div>
         ) : (
           <>
             <div className="space-y-3">
-              <p className="section-title">A mesma coisa, nos quatro</p>
+              <p className="section-title">A mesma coisa, nos dois</p>
               {ideas.map((idea, i) => (
                 <IdeaCard
                   key={`${idea.gloss}-${i}`}
@@ -203,7 +203,7 @@ export function CanDoContrastRunner({
         )}
       </div>
 
-      <LessonFooter detail="No fim do dia esta mesma função volta, nos quatro idiomas e sem consulta.">
+      <LessonFooter detail="No fim do dia esta mesma função volta, nos dois idiomas e sem consulta.">
         <SkipButton onSkip={onSkip} />
         {/* Bloco de leitura: nao ha o que pontuar, e inventar uma nota aqui
             sujaria a media do dia com algo que nao foi medido. */}

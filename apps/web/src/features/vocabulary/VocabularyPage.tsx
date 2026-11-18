@@ -40,9 +40,7 @@ const STATUS: Record<VocabStatus, { label: string; chip: string; bar: string }> 
 const LANGUAGE_FILTERS = [
   { value: '', label: 'Todos' },
   { value: 'en', label: 'EN' },
-  { value: 'es', label: 'ES' },
   { value: 'de', label: 'DE' },
-  { value: 'ru', label: 'RU' },
 ];
 
 const STATUS_FILTERS = [

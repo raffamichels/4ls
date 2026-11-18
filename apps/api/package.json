@@ -16,6 +16,7 @@
     "db:rewind": "tsx prisma/rewind.ts",
     "db:backfill-concepts": "nest build && node dist/prisma/backfill-concepts.js",
     "db:enroll-languages": "tsx prisma/enroll-languages.ts",
+    "db:retire-languages": "tsx prisma/retire-languages.ts",
     "db:merge-concepts": "tsx prisma/merge-concepts.ts",
     "content:warm": "nest build && node dist/prisma/warm-content.js",
     "test": "vitest run",

@@ -431,7 +431,7 @@ export function planSession(
       pillar: Pillar.LIVE,
       type: 'production',
       plannedMinutes: production,
-      reason: 'Dizer a mesma coisa nos quatro idiomas, sem alternativa na tela.',
+      reason: 'Dizer a mesma coisa nos dois idiomas, sem alternativa na tela.',
     });
   }
 
@@ -453,7 +453,7 @@ export function planSession(
 
   return {
     totalMinutes: activities.reduce((sum, a) => sum + a.plannedMinutes, 0),
-    rationale: production > 0 ? `${base} Hoje tem producao quadrupla.` : base,
+    rationale: production > 0 ? `${base} Hoje tem producao cruzada.` : base,
     activities,
   };
 }
@@ -586,9 +586,9 @@ function planLanguage(
 /** Por que cada bloco obrigatorio esta ali -- a sessao sempre se explica. */
 const DAILY_REASON: Record<string, string> = {
   contrast:
-    'A mesma frase nos quatro idiomas, lado a lado. É aqui que você vê o que muda de um para o outro.',
+    'A mesma frase nos dois idiomas, lado a lado. É aqui que você vê o que muda de um para o outro.',
   compare:
-    'Diga a mesma coisa nos quatro, de memória, e só depois confira. O contraste fecha o dia.',
+    'Diga a mesma coisa nos dois, de memória, e só depois confira. O contraste fecha o dia.',
   structure: 'Como este idioma monta a frase. Saber a palavra nao basta para dizer a frase.',
   alphabet: 'Ler as letras deste idioma. Sem isso, a palavra é só desenho.',
   foundation:

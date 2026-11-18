@@ -210,12 +210,12 @@ export function SessionPage() {
               crossLanguage ? 'border-swan bg-snow text-wolf' : `${language.soft} ${language.border} ${language.text}`
             }`}
           >
-            {crossLanguage ? '4' : language.mark}
+            {crossLanguage ? '2' : language.mark}
           </span>
           <div className="min-w-0">
             <h1 className="truncate font-serif text-lg font-semibold text-eel">
               {theme.label}
-              {crossLanguage ? ', os quatro idiomas' : `, ${current.languageName}`}
+              {crossLanguage ? ', os dois idiomas' : `, ${current.languageName}`}
             </h1>
             <p className="font-mono text-xs text-hare">
               bloco {session.activities.findIndex((a) => a.id === current.id) + 1} de {total},{' '}

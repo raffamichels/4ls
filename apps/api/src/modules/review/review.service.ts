@@ -20,7 +20,7 @@ export class ReviewService {
         userId,
         nextReview: { lte: new Date() },
         status: { not: VocabStatus.MASTERED },
-        ...(languageCode ? { vocabulary: { language: { code: languageCode } } } : {}),
+        vocabulary: enrolledLanguage(userId, languageCode),
       },
       include: { vocabulary: { include: { language: true } } },
       orderBy: { nextReview: 'asc' },
@@ -73,6 +73,7 @@ export class ReviewService {
         userId,
         nextReview: { lte: new Date() },
         status: { not: VocabStatus.MASTERED },
+        vocabulary: enrolledLanguage(userId),
       },
       select: { vocabulary: { select: { language: { select: { code: true } } } } },
     });
@@ -189,4 +190,21 @@ export class ReviewService {
       });
     }
   }
+}
+
+/**
+ * Restringe o vocabulario aos idiomas em que o aluno esta matriculado.
+ *
+ * A matricula e a fonte da verdade de "o que ele estuda". Sem este filtro, um
+ * idioma que saiu do estudo (espanhol e russo, por exemplo) continuaria
+ * mandando cards vencidos para a revisao para sempre, porque o historico
+ * dele fica no banco de proposito.
+ */
+export function enrolledLanguage(userId: string, languageCode?: string) {
+  return {
+    language: {
+      userLanguages: { some: { userId } },
+      ...(languageCode ? { code: languageCode } : {}),
+    },
+  };
 }
