@@ -103,7 +103,7 @@ export function InstallButton({ className = '' }: { className?: string }) {
         onClick={() => setShowGuide(true)}
         aria-label="Instalar o app"
         title="Instalar o app"
-        className={`flex shrink-0 items-center gap-1.5 rounded-md border border-grass bg-grass-soft px-2.5 py-1.5 text-xs font-medium text-grass-dark transition hover:bg-grass hover:text-snow ${className}`}
+        className={`press flex min-h-9 shrink-0 items-center gap-1.5 rounded-lg bg-accent-soft px-3 py-1.5 text-xs font-semibold text-accent-dark transition-colors hover:bg-accent hover:text-white ${className}`}
       >
         <span className="hidden sm:inline">Instalar</span>
         <span className="sm:hidden">Instalar app</span>

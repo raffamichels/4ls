@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { AudioButton } from '../../components/AudioButton';
 import { ProgressBar } from '../../components/ProgressBar';
+import { Segmented } from '../../components/Segmented';
 import { languageTheme } from '../../lib/ui';
 import { api } from '../../services/api';
 import { VocabStatus } from '../../types';
@@ -39,8 +40,8 @@ const STATUS: Record<VocabStatus, { label: string; chip: string; bar: string }> 
  */
 const LANGUAGE_FILTERS = [
   { value: '', label: 'Todos' },
-  { value: 'en', label: 'EN' },
-  { value: 'de', label: 'DE' },
+  { value: 'en', label: 'Inglês' },
+  { value: 'de', label: 'Alemão' },
 ];
 
 const STATUS_FILTERS = [
@@ -68,15 +69,25 @@ export function VocabularyPage() {
   return (
     <div className="space-y-5">
       <header>
-        <h1 className="font-serif text-2xl font-semibold tracking-tight text-eel">Suas palavras</h1>
+        <h1 className="page-title">Palavras</h1>
         <p className="text-sm text-wolf">Cada termo guarda contexto, histórico de acertos e a próxima revisão.</p>
       </header>
 
       <TextCapture />
 
       <div className="space-y-2">
-        <FilterRow options={LANGUAGE_FILTERS} value={language} onChange={setLanguage} />
-        <FilterRow options={STATUS_FILTERS} value={status} onChange={setStatus} />
+        <Segmented label="Idioma" options={LANGUAGE_FILTERS} value={language} onChange={setLanguage} />
+        <div className="hscroll -mx-4 px-4">
+          <Segmented
+            label="Situação"
+            variant="underline"
+            minColumn="5rem"
+            className="w-max min-w-full"
+            options={STATUS_FILTERS}
+            value={status}
+            onChange={setStatus}
+          />
+        </div>
       </div>
 
       {isLoading && (
@@ -106,34 +117,6 @@ export function VocabularyPage() {
           </div>
         </>
       )}
-    </div>
-  );
-}
-
-function FilterRow({
-  options,
-  value,
-  onChange,
-}: {
-  options: Array<{ value: string; label: string }>;
-  value: string;
-  onChange: (value: string) => void;
-}) {
-  return (
-    <div className="hscroll -mx-4 flex gap-2 px-4 pb-1">
-      {options.map((option) => (
-        <button
-          key={option.value}
-          onClick={() => onChange(option.value)}
-          className={`shrink-0 rounded-md border px-3.5 py-1.5 text-xs transition ${
-            value === option.value
-              ? 'border-macaw bg-macaw-soft text-macaw-dark'
-              : 'border-swan bg-white text-wolf hover:bg-snow'
-          }`}
-        >
-          {option.label}
-        </button>
-      ))}
     </div>
   );
 }

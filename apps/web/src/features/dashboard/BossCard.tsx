@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { Hero } from '../../components/Hero';
 import { ProgressBar } from '../../components/ProgressBar';
 import { languageTheme } from '../../lib/ui';
 import { api } from '../../services/api';
@@ -74,25 +73,15 @@ function Open({
   onStart: () => void;
   pending: boolean;
 }) {
-  const theme = languageTheme(gate.languageCode);
-
   return (
-    <section className="relative overflow-hidden rounded-2xl border-2 border-bee bg-bee-soft p-5">
-      {/* O halo só existe aqui: é a única coisa do painel que espera uma decisão. */}
-      <div
-        className="pointer-events-none absolute -right-8 -top-10 h-40 w-40 rounded-full bg-bee opacity-20 blur-2xl"
-        aria-hidden
-      />
-
+    <section className="relative animate-rise overflow-hidden rounded-2xl bg-espresso p-5 text-white">
       <div className="relative flex items-center gap-4">
-        <Hero mood="focus" size="md" accent="text-bee" className="shrink-0" />
-
         <div className="min-w-0 flex-1">
-          <p className="section-title text-bee-dark">Chefe de fase</p>
-          <p className="font-serif text-xl font-bold leading-tight text-eel">
+          <p className="text-xs font-semibold text-honey">Chefe de fase</p>
+          <p className="mt-1 font-display text-xl font-semibold leading-tight text-white">
             {gate.languageName} pode subir para {gate.nextLevel}
           </p>
-          <p className="mt-1 text-sm leading-snug text-wolf">
+          <p className="mt-1.5 text-sm leading-snug text-latte">
             Um exame com gabarito, do que você já estudou. Se passar, o conteúdo deste idioma sobe
             de nível junto.
           </p>
@@ -100,14 +89,18 @@ function Open({
       </div>
 
       <div className="relative mt-4 flex items-center gap-3">
-        <span className={`chip ${theme.border} ${theme.text}`}>{gate.currentLevel}</span>
-        <span className="font-mono text-hare" aria-hidden>
+        <span className="rounded-lg bg-espresso-3 px-2.5 py-1 text-xs font-semibold text-latte">
+          {gate.currentLevel}
+        </span>
+        <span className="animate-nudge text-honey" aria-hidden>
           &rarr;
         </span>
-        <span className="chip border-bee text-bee">{gate.nextLevel}</span>
+        <span className="rounded-lg bg-honey px-2.5 py-1 text-xs font-semibold text-espresso">
+          {gate.nextLevel}
+        </span>
       </div>
 
-      <button className="btn-primary mt-4 w-full py-4 text-base" onClick={onStart} disabled={pending}>
+      <button className="btn-primary mt-4 w-full" onClick={onStart} disabled={pending}>
         {pending ? 'Convocando...' : 'Encarar o chefe'}
       </button>
     </section>

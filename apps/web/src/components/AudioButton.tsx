@@ -38,10 +38,8 @@ export function AudioButton({
       onClick={() => (isThis ? speaker.stop() : void speaker.speak(text, languageCode))}
       aria-label={label ?? `Ouvir: ${text}`}
       title={speaker.naturalVoice ? 'Ouvir' : 'Ouvir (voz do navegador)'}
-      className={`inline-flex shrink-0 items-center justify-center gap-2 rounded-md border text-sm font-medium transition-colors ${
-        isThis
-          ? 'border-macaw-dark bg-macaw text-snow'
-          : 'border-macaw bg-macaw-soft text-macaw-dark'
+      className={`press inline-flex shrink-0 items-center justify-center gap-2 rounded-xl text-sm font-semibold transition-colors ${
+        isThis ? 'bg-accent text-white' : 'bg-accent-soft text-accent-dark'
       } ${label ? 'px-4 py-3' : box} ${className}`}
     >
       <SpeakerIcon animated={isThis} />

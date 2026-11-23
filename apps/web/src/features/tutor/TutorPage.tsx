@@ -114,7 +114,7 @@ export function TutorPage() {
   return (
     <div className="space-y-4">
       <header>
-        <h1 className="font-serif text-2xl font-semibold tracking-tight text-eel">Tutor</h1>
+        <h1 className="section-title">Tutor</h1>
         <p className="text-sm text-wolf">Seus erros aqui entram no perfil e voltam como exercício.</p>
       </header>
 

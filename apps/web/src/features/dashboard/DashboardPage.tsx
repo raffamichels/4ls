@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { Hero } from '../../components/Hero';
+import { InstallButton } from '../../components/InstallPrompt';
 import { ProgressBar } from '../../components/ProgressBar';
 import { activityTheme, languageTheme, scoreTone, SKILL_LABEL } from '../../lib/ui';
 import { api } from '../../services/api';
+import { useAuthStore } from '../../stores/auth.store';
 import { DashboardData, DashboardLanguage, SessionActivity, XpSummary } from '../../types';
 import { BossCard } from './BossCard';
 import { PracticePicker } from './PracticePicker';
@@ -33,6 +34,7 @@ const XP_BY_TYPE: Record<string, number> = {
 
 export function DashboardPage() {
   const navigate = useNavigate();
+  const user = useAuthStore((s) => s.user);
 
   const { data, isLoading, isError } = useQuery<DashboardData>({
     queryKey: ['dashboard'],
@@ -46,8 +48,8 @@ export function DashboardPage() {
 
   if (isError || !data) {
     return (
-      <div className="card border-cardinal bg-cardinal-soft">
-        <p className="font-serif font-bold text-cardinal-dark">Não deu para carregar seu dia.</p>
+      <div className="card bg-cardinal-soft">
+        <p className="font-display font-semibold text-cardinal-dark">Não deu para carregar seu dia.</p>
         <p className="text-sm text-wolf">Verifique se a API está no ar e recarregue.</p>
       </div>
     );
@@ -65,82 +67,67 @@ export function DashboardPage() {
     .filter((a) => !a.completed)
     .reduce((sum, a) => sum + (XP_BY_TYPE[a.type] ?? 10), 0);
 
+  const languageNames = [...new Set(session.activities.map((a) => a.languageName))];
+
   return (
     <div className="space-y-6">
-      <LevelBanner xp={xp} streak={streak.current} allDone={allDone} />
+      <div>
+        <DayHeader name={user?.name} xp={xp} streak={streak.current} />
+
+        <MissionCard
+          allDone={allDone}
+          completed={session.completed}
+          done={done}
+          total={total}
+          languages={languageNames}
+          minutes={session.plannedMinutes}
+          xpLeft={xpLeft}
+          onStart={() => navigate('/sessao')}
+        />
+      </div>
 
       {/*
         O "porque" da sessao continua sendo requisito do produto: o aluno precisa
-        entender qual criterio gerou o plano de hoje. Virou fala do personagem --
-        a informacao e a mesma, mas agora tem alguem dizendo.
+        entender qual criterio gerou o plano de hoje.
       */}
       {session.rationale && (
-        <p className="rounded-xl border border-swan bg-white px-4 py-3 text-sm leading-snug text-wolf">
+        <p className="animate-rise px-1 text-sm leading-relaxed text-wolf [animation-delay:200ms]">
           {session.rationale}
         </p>
       )}
 
-      <section className="space-y-4">
-        <div className="flex items-end justify-between gap-3">
-          <div>
-            <h2 className="section-title">Missão de hoje</h2>
-            <p className="text-xs text-hare">
-              {allDone ? 'Tudo conquistado.' : `${total - done} de ${total} blocos restantes`}
-            </p>
+      {total > 0 && (
+        <section className="space-y-2">
+          <div className="flex items-baseline justify-between px-1">
+            <h2 className="section-label">Blocos de hoje</h2>
+            <span className="text-[13px] text-wolf">
+              {done} de {total}
+            </span>
           </div>
-          {xpLeft > 0 && (
-            <span className="chip border-bee text-bee">+{xpLeft} XP em jogo</span>
-          )}
-        </div>
-
-        {/*
-          O `px-6` e o corredor do ziguezague, nao respiro visual.
-
-          Os nos sao `w-full` e se deslocam 24px para cada lado; sem reservar
-          esses 24px aqui, o no deslocado para a direita termina 24px FORA da
-          largura da tela e o celular passa a arrastar de lado. O `overflow-x:
-          clip` do documento esconderia o sintoma, e esconder layout quebrado
-          nao e conserta-lo -- o toque continuaria caindo fora do botao na
-          faixa cortada.
-        */}
-        <div className="relative px-6">
-          {session.activities.map((activity, index) => (
-            <TrailNode
-              key={activity.id}
-              activity={activity}
-              index={index}
-              isNext={index === nextIndex}
-              isLast={index === session.activities.length - 1}
-              onStart={() => navigate(`/sessao?activity=${activity.id}`)}
-            />
-          ))}
-        </div>
-
-        <button
-          className="btn-primary w-full py-4 text-base"
-          onClick={() => navigate('/sessao')}
-          disabled={session.completed}
-        >
-          {session.completed
-            ? 'Missão concluída'
-            : done > 0
-              ? 'Continuar missão'
-              : 'Iniciar missão'}
-        </button>
-      </section>
+          <ol className="list-group animate-rise [animation-delay:220ms]">
+            {session.activities.map((activity, index) => (
+              <MissionRow
+                key={activity.id}
+                activity={activity}
+                index={index}
+                isNext={index === nextIndex}
+                onStart={() => navigate(`/sessao?activity=${activity.id}`)}
+              />
+            ))}
+          </ol>
+        </section>
+      )}
 
       {/*
-        O chefe vem DEPOIS da missao do dia e ANTES da pratica livre.
-        Antes da missao ele competiria com o que o aluno veio fazer; depois da
-        pratica livre viraria rodape. Aqui ele e a recompensa que aparece quando
-        o dia ja esta encaminhado.
+        O chefe vem DEPOIS da missao do dia e ANTES da pratica livre: e a
+        recompensa que aparece quando o dia ja esta encaminhado.
       */}
       <BossCard />
 
       <PracticePicker languages={languages} />
 
-      <section className="space-y-3">
-        <h2 className="section-title">Seus idiomas</h2>
+      <section className="space-y-2">
+        <h2 className="section-label px-1">Seus idiomas</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           {languages.map((language) => (
             <LanguageCard key={language.code} language={language} />
@@ -149,12 +136,12 @@ export function DashboardPage() {
       </section>
 
       {!data.aiEnabled && (
-        <div className="card border-bee bg-bee-soft">
+        <div className="card bg-bee-soft">
           <p className="text-sm text-eel">
             Nenhum provider de IA configurado. O tutor e a geração de exercícios ficam
-            indisponíveis até você preencher <code className="font-mono">MIMO_API_KEY</code> ou{' '}
-            <code className="font-mono">OPENROUTER_API_KEY</code> no .env do backend. O resto do
-            sistema funciona normalmente.
+            indisponíveis até você preencher <code>MIMO_API_KEY</code> ou{' '}
+            <code>OPENROUTER_API_KEY</code> no .env do backend. O resto do sistema funciona
+            normalmente.
           </p>
         </div>
       )}
@@ -162,194 +149,227 @@ export function DashboardPage() {
   );
 }
 
+function greeting(date: Date): string {
+  const hour = date.getHours();
+  if (hour < 5) return 'Boa noite';
+  if (hour < 12) return 'Bom dia';
+  if (hour < 18) return 'Boa tarde';
+  return 'Boa noite';
+}
+
 /**
- * O topo: quem voce e, quanto falta para subir, e o personagem reagindo.
+ * O topo escuro: quem voce e, a sequencia e quanto falta para o proximo nivel.
  *
- * O nivel fica acima de tudo porque e a unica coisa da tela que responde "estou
- * chegando aonde?". A sequencia entra ao lado e nao no meio de uma frase, como
- * estava antes -- sequencia escondida em texto corrido nao segura ninguem.
+ * Ele sangra ate a borda da tela no celular (as margens negativas desfazem o
+ * `px-4`/`pt` do Layout) e vira um bloco arredondado a partir do `sm`, onde a
+ * coluna de conteudo ja nao ocupa a largura toda.
  */
-function LevelBanner({
-  xp,
-  streak,
-  allDone,
-}: {
-  xp: XpSummary;
-  streak: number;
-  allDone: boolean;
-}) {
+function DayHeader({ name, xp, streak }: { name?: string; xp: XpSummary; streak: number }) {
   const { progress } = xp;
+  const now = new Date();
+  const date = now.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+  const firstName = name?.split(' ')[0];
 
   return (
-    <section className="relative overflow-hidden rounded-2xl border border-swan bg-white p-5">
-      {/* Halo do nivel atras do personagem. */}
-      <div
-        className="pointer-events-none absolute -right-6 -top-10 h-40 w-40 rounded-full bg-macaw opacity-[0.07] blur-2xl"
-        aria-hidden
-      />
-
-      <div className="relative flex items-center gap-4">
-        <Hero
-          mood={allDone ? 'cheer' : streak === 0 ? 'sad' : 'idle'}
-          size="md"
-          accent={allDone ? 'text-grass' : 'text-macaw'}
-          className="shrink-0"
-        />
-
-        <div className="min-w-0 flex-1">
-          <div className="flex items-baseline gap-2">
-            <span className="font-serif text-2xl font-bold leading-none text-eel">
-              Nível {progress.level}
-            </span>
-            <span className="truncate text-xs font-bold uppercase tracking-wide text-macaw">
-              {progress.title}
-            </span>
-          </div>
-
-          <div className="mt-2.5">
-            {/* A barra ganha um brilho que atravessa: e o unico lugar do app com
-                movimento continuo, e e ele que diz "isto aqui enche". */}
-            <div className="relative overflow-hidden rounded-full">
-              <ProgressBar
-                value={progress.xpIntoLevel}
-                max={progress.xpForLevel}
-                tone="bg-bee"
-                size="lg"
-                trackClassName="bg-snow"
-              />
-              <span
-                className="animate-sheen pointer-events-none absolute inset-y-0 w-8 bg-white/25 blur-sm"
-                aria-hidden
-              />
-            </div>
-            {/* "para o nível 8" saiu: o nivel ja esta escrito grande logo
-                acima, e a frase inteira quebrava linha num aparelho estreito,
-                deixando o numero do nivel sozinho embaixo. */}
-            <p className="mt-1.5 text-[11px] text-hare">
-              <span className="stat">{progress.xpIntoLevel}</span>
-              <span className="text-hare">/{progress.xpForLevel} XP</span>
-              {' · faltam '}
-              <span className="stat">{progress.xpRemaining}</span>
-            </p>
-          </div>
+    <section className="-mx-4 -mt-[calc(env(safe-area-inset-top)+1.5rem)] bg-espresso px-5 pb-24 pt-[calc(env(safe-area-inset-top)+1.75rem)] sm:mx-0 sm:mt-0 sm:rounded-3xl sm:pt-6">
+      <div className="flex animate-fade items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-xs text-latte first-letter:uppercase">{date}</p>
+          <p className="truncate font-display text-lg font-semibold text-white">
+            {greeting(now)}
+            {firstName ? `, ${firstName}` : ''}
+          </p>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <InstallButton className="lg:hidden" />
+          <span
+            className="flex h-11 w-11 items-center justify-center rounded-[14px] bg-espresso-3 font-semibold text-accent-soft"
+            aria-hidden
+          >
+            {firstName?.[0]?.toUpperCase() ?? '4'}
+          </span>
         </div>
       </div>
 
-      <div className="relative mt-4 grid grid-cols-3 gap-2 border-t border-swan pt-3">
-        <Stat value={streak} label={streak === 1 ? 'dia seguido' : 'dias seguidos'} tone="text-bee" />
-        <Stat value={xp.today} label="XP hoje" tone="text-grass" />
-        <Stat value={xp.total} label="XP total" tone="text-macaw" />
+      <div className="mt-[18px] flex gap-2.5">
+        <div className="flex-1 animate-rise rounded-[14px] bg-espresso-2 px-3.5 py-3 [animation-delay:60ms]">
+          <p className="text-[11px] text-latte">Sequência</p>
+          <p className="mt-1 font-display text-base font-semibold text-white">
+            {streak} {streak === 1 ? 'dia' : 'dias'}
+          </p>
+        </div>
+        <div
+          className="min-w-0 flex-[1.6] animate-rise rounded-[14px] bg-espresso-2 px-3.5 py-3 [animation-delay:110ms]"
+          title={`Nível ${progress.level} — ${progress.title}`}
+        >
+          <div className="flex items-baseline justify-between gap-2">
+            <p className="text-[11px] text-latte">Nível {progress.level}</p>
+            <p className="truncate text-[11px] text-honey">faltam {progress.xpRemaining} XP</p>
+          </div>
+          <div
+            className="mt-2 h-1.5 overflow-hidden rounded-full bg-espresso-3"
+            role="progressbar"
+            aria-label="Progresso do nível"
+            aria-valuenow={progress.percent}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
+            <div
+              className="h-full origin-left animate-fill rounded-full bg-bee transition-[width] duration-500 ease-out"
+              style={{ width: `${progress.percent}%` }}
+            />
+          </div>
+        </div>
       </div>
     </section>
   );
 }
 
-function Stat({ value, label, tone }: { value: number; label: string; tone: string }) {
+/** O card caramelo da missao, sobreposto a borda de baixo do topo escuro. */
+function MissionCard({
+  allDone,
+  completed,
+  done,
+  total,
+  languages,
+  minutes,
+  xpLeft,
+  onStart,
+}: {
+  allDone: boolean;
+  completed: boolean;
+  done: number;
+  total: number;
+  languages: string[];
+  minutes: number;
+  xpLeft: number;
+  onStart: () => void;
+}) {
+  const left = total - done;
+  const title = allDone
+    ? 'Missão concluída'
+    : done > 0
+      ? `Faltam ${left} ${left === 1 ? 'bloco' : 'blocos'}`
+      : `${total} ${total === 1 ? 'bloco' : 'blocos'} para hoje`;
+
+  const details = [
+    new Intl.ListFormat('pt-BR', { type: 'conjunction' }).format(languages),
+    minutes ? `cerca de ${minutes} min` : null,
+    xpLeft > 0 ? `+${xpLeft} XP` : null,
+  ].filter(Boolean);
+
   return (
-    <div className="text-center">
-      <p className={`font-mono text-xl font-bold tabular-nums leading-none ${tone}`}>{value}</p>
-      <p className="mt-1 text-[10px] uppercase tracking-wide text-hare">{label}</p>
-    </div>
+    <section className="relative -mt-[4.5rem] animate-rise rounded-2xl bg-accent p-5 [animation-delay:160ms] sm:mx-4">
+      <span className="inline-block rounded-lg bg-accent-soft px-2.5 py-1 text-[11px] font-semibold text-accent-dark">
+        Missão de hoje
+      </span>
+      <p className="mt-3 font-display text-xl font-semibold leading-snug text-white">{title}</p>
+      {details.length > 0 && <p className="mt-1.5 text-xs text-[#F8E9DE]">{details.join(' · ')}</p>}
+
+      <button
+        className="press mt-4 inline-flex min-h-11 items-center rounded-xl bg-white px-5 text-sm font-semibold text-accent-dark transition-colors hover:bg-accent-soft disabled:opacity-60"
+        onClick={onStart}
+        disabled={completed || total === 0}
+      >
+        {completed ? 'Tudo feito por hoje' : done > 0 ? `Continuar · ${done} de ${total}` : 'Começar missão'}
+      </button>
+    </section>
   );
 }
 
 /**
- * Um no da trilha.
+ * Um bloco da missao, como linha numerada.
  *
- * O zigue-zague nao e enfeite: ele e o que transforma uma lista numa TRILHA.
- * Uma coluna reta de cartoes le como lista de tarefas -- e lista de tarefas e
- * exatamente a sensacao que este redesenho veio tirar. O deslocamento
- * alternado, com a linha ligando um no ao seguinte, faz o olho ler percurso.
+ * A trilha em zigue-zague com halo pulsando saiu junto com o visual de jogo: a
+ * ordem do dia ja se le de cima para baixo, e o numero diz "isto vem antes
+ * daquilo" sem precisar de desenho. O proximo bloco se destaca pelo anel
+ * caramelo e pela seta, nao por brilho.
  *
- * Tres estados, e so o do meio e clicavel a primeira vista:
- * - conquistado: preenchido, com o visto.
- * - atual: halo pulsando, e o unico com brilho.
- * - a seguir: apagado, mas ainda tocavel -- o aluno pode pular a ordem se
- *   quiser, e tirar isso dele seria uma regressao do que ja funcionava.
+ * Os blocos ainda abertos continuam tocaveis fora de ordem -- o aluno pode
+ * pular a sequencia se quiser.
  */
-function TrailNode({
+function MissionRow({
   activity,
   index,
   isNext,
-  isLast,
   onStart,
 }: {
   activity: SessionActivity;
   index: number;
   isNext: boolean;
-  isLast: boolean;
   onStart: () => void;
 }) {
   const theme = activityTheme(activity.type);
-  const language = languageTheme(activity.languageCode);
   const xpValue = XP_BY_TYPE[activity.type] ?? 10;
-
-  // Quatro posicoes ciclicas: centro, direita, centro, esquerda. Um seno
-  // discreto -- o suficiente para ler caminho, longe o bastante de virar
-  // labirinto em 360px de largura.
-  const offsets = ['translate-x-0', 'translate-x-6', 'translate-x-0', '-translate-x-6'];
-  const offset = offsets[index % offsets.length];
-
   const done = activity.completed;
-  const Wrapper = done ? 'div' : 'button';
 
   return (
-    <div className="relative flex flex-col items-center">
-      <Wrapper
-        {...(done
-          ? {}
-          : { onClick: onStart, type: 'button' as const, 'aria-label': `Começar ${theme.label}` })}
-        className={`relative z-10 flex w-full max-w-sm items-center gap-3 rounded-xl border p-3 transition-transform ${offset} ${
-          done
-            ? 'border-swan bg-snow opacity-60'
-            : isNext
-              ? 'border-macaw bg-white'
-              : 'border-swan bg-white active:scale-[0.98]'
-        }`}
+    <li className="list-row animate-rise px-0" style={{ animationDelay: `${260 + index * 55}ms` }}>
+      <button
+        type="button"
+        onClick={done ? undefined : onStart}
+        disabled={done}
+        aria-label={done ? `${theme.label}: feito` : `Começar ${theme.label}`}
+        className="flex min-h-14 w-full items-center gap-3.5 px-4 py-2 text-left"
       >
         <span
-          className={`relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 font-mono text-base font-bold ${
+          className={`flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-full border-[1.5px] text-xs font-semibold ${
             done
-              ? 'border-grass bg-grass text-snow'
-              : `${language.border} ${language.soft} ${language.text}`
+              ? 'border-accent bg-accent text-white'
+              : isNext
+                ? 'border-accent text-accent'
+                : 'border-[#D9CEC5] text-hare'
           }`}
         >
-          {/* Halo pulsando, so no no atual. */}
-          {isNext && (
-            <span
-              className={`absolute inset-0 -z-10 animate-halo rounded-full ${language.bg} opacity-40`}
+          {done ? (
+            <svg
+              viewBox="0 0 24 24"
+              className="h-3 w-3"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={3}
+              strokeLinecap="round"
+              strokeLinejoin="round"
               aria-hidden
-            />
+            >
+              <path d="M5 12l5 5 9-10" />
+            </svg>
+          ) : (
+            index + 1
           )}
-          {done ? '✓' : language.mark}
         </span>
 
-        <div className="min-w-0 flex-1 text-left">
-          <div className="flex items-baseline justify-between gap-2">
-            <p className={`truncate font-bold ${done ? 'text-hare line-through' : 'text-eel'}`}>
-              {theme.label}
-            </p>
-            <span className={`shrink-0 font-mono text-xs font-bold ${done ? 'text-hare' : 'text-bee'}`}>
-              {done ? '✓' : `+${xpValue}`}
-            </span>
-          </div>
-          <p className="line-clamp-2 text-xs leading-snug text-wolf">
-            {activity.reason ?? theme.blurb}
-          </p>
-          <p className="mt-0.5 font-mono text-[10px] text-hare">
-            {activity.languageName} · {activity.plannedMinutes} min
-          </p>
-        </div>
-      </Wrapper>
+        <span className="min-w-0 flex-1">
+          <span
+            className={`block text-[15px] ${isNext ? 'font-semibold' : 'font-medium'} ${
+              done ? 'text-wolf' : 'text-eel'
+            }`}
+          >
+            {theme.label}
+          </span>
+          <span className="block truncate text-[13px] text-wolf">
+            {activity.languageName} · {activity.reason ?? theme.blurb}
+          </span>
+        </span>
 
-      {/* O trecho de caminho ate o proximo no. */}
-      {!isLast && (
-        <span
-          className={`h-4 w-1 rounded-full ${done ? 'bg-grass opacity-50' : 'bg-swan'}`}
-          aria-hidden
-        />
-      )}
-    </div>
+        {isNext ? (
+          <svg
+            viewBox="0 0 24 24"
+            className="h-[18px] w-[18px] shrink-0 animate-nudge text-accent"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
+            <path d="M9 5l7 7-7 7" />
+          </svg>
+        ) : (
+          !done && <span className="shrink-0 text-xs font-medium text-hare">+{xpValue}</span>
+        )}
+      </button>
+    </li>
   );
 }
 

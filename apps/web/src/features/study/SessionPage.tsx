@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Hero } from '../../components/Hero';
 import { CloseIcon } from '../../components/Icons';
 import { ProgressBar } from '../../components/ProgressBar';
 import { activityTheme, languageTheme, PILLAR_LABEL } from '../../lib/ui';
@@ -80,57 +79,14 @@ export function SessionPage() {
     return (
       <Shell>
         <div className="mx-auto max-w-md space-y-3 pt-20 text-center">
-          <p className="font-serif text-lg font-semibold text-eel">Montando sua sessão...</p>
+          <p className="animate-fade font-display text-lg font-semibold text-eel">Montando sua sessão...</p>
         </div>
       </Shell>
     );
   }
 
   if (finished) {
-    return (
-      <Shell>
-        <div className="mx-auto max-w-md space-y-5 pt-10 text-center">
-          {/*
-            O maior momento de recompensa do app era um titulo e dois numeros.
-            Aqui o personagem entra grande e comemorando: e a unica tela em que
-            ele ocupa o centro, e e justamente a que o aluno alcanca depois de
-            cumprir o dia inteiro.
-          */}
-          <Hero mood="cheer" size="lg" accent="text-grass" className="mx-auto" />
-
-          <div>
-            <h1 className="font-serif text-2xl font-bold text-eel">Missão concluída</h1>
-            <p className="text-sm text-wolf">O dia de hoje entrou na sua sequência.</p>
-          </div>
-
-          <div className="mx-auto flex max-w-xs justify-center gap-3">
-            <Trophy label="XP ganho" value={`+${finished.xp}`} tone="border-bee text-bee" />
-            <Trophy
-              label="Conquistas"
-              value={`${finished.achievements.length}`}
-              tone="border-humpback text-humpback"
-            />
-          </div>
-
-          {finished.achievements.length > 0 && (
-            <div className="card animate-pop border-humpback bg-humpback-soft text-left">
-              <p className="section-title mb-1.5 text-humpback-dark">Novas conquistas</p>
-              <ul className="space-y-1">
-                {finished.achievements.map((name) => (
-                  <li key={name} className="text-sm font-bold text-humpback-dark">
-                    {name}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <button className="btn-primary w-full py-4 text-base" onClick={() => navigate('/')}>
-            Voltar ao início
-          </button>
-        </div>
-      </Shell>
-    );
+    return <FinishedScreen xp={finished.xp} achievements={finished.achievements} onHome={() => navigate('/')} />;
   }
 
   const done = session.activities.filter((a) => a.completed).length;
@@ -192,10 +148,10 @@ export function SessionPage() {
           >
             <CloseIcon className="h-6 w-6" />
           </button>
-          <ProgressBar value={done} max={total} size="lg" />
+          <ProgressBar value={done} max={total} size="sm" tone="bg-accent" />
           <span
             className={`shrink-0 font-mono text-sm tabular-nums ${
-              overtime ? 'text-beak' : 'text-hare'
+              overtime ? 'text-accent' : 'text-wolf'
             }`}
           >
             {formatTime(elapsed)}
@@ -203,11 +159,11 @@ export function SessionPage() {
         </>
       }
     >
-      <div className="lesson-pad space-y-5">
+      <div key={current.id} className="lesson-pad animate-page space-y-5">
         <div className="flex items-center gap-3">
           <span
-            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-md border font-mono text-lg ${
-              crossLanguage ? 'border-swan bg-snow text-wolf' : `${language.soft} ${language.border} ${language.text}`
+            className={`flex h-12 w-12 shrink-0 animate-pop items-center justify-center rounded-xl font-display text-lg font-semibold ${
+              crossLanguage ? 'bg-accent-soft text-accent-dark' : `${language.soft} ${language.text}`
             }`}
           >
             {crossLanguage ? '2' : language.mark}
@@ -225,7 +181,7 @@ export function SessionPage() {
         </div>
 
         {current.reason && (
-          <p className="border-l-2 border-swan pl-3 font-serif text-sm italic leading-snug text-wolf">
+          <p className="animate-rise text-sm leading-relaxed text-wolf [animation-delay:80ms]">
             {current.reason}
           </p>
         )}
@@ -258,7 +214,7 @@ function Shell({ header, children }: { header?: React.ReactNode; children: React
     // `vh` a tela fica mais alta que o visivel e o fim do conteudo some.
     <div className="min-h-[100dvh] bg-snow">
       {header && (
-        <header className="sticky top-0 z-10 border-b border-swan bg-snow pt-[env(safe-area-inset-top)]">
+        <header className="sticky top-0 z-10 bg-snow/95 pt-[env(safe-area-inset-top)] backdrop-blur">
           <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3">{header}</div>
         </header>
       )}
@@ -267,12 +223,101 @@ function Shell({ header, children }: { header?: React.ReactNode; children: React
   );
 }
 
-function Trophy({ label, value, tone }: { label: string; value: string; tone: string }) {
+/**
+ * Conta de 0 ate `target` com desaceleracao no fim.
+ *
+ * O numero do XP subindo e a recompensa da tela -- um "+110" parado le como
+ * extrato, o mesmo numero chegando la le como ganho. Quem pediu menos
+ * movimento recebe o valor final direto.
+ */
+function useCountUp(target: number, delay = 250, duration = 1000): number {
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || target <= 0) {
+      setValue(target);
+      return;
+    }
+    let raf = 0;
+    const start = performance.now() + delay;
+    const tick = (now: number) => {
+      const t = Math.max(0, Math.min(1, (now - start) / duration));
+      setValue(Math.round(target * (1 - Math.pow(1 - t, 3))));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, delay, duration]);
+
+  return value;
+}
+
+/**
+ * O fim do dia.
+ *
+ * Era o personagem grande comemorando; agora e o bloco escuro do app com o XP
+ * contando em caramelo. O momento continua sendo o maior da sessao -- so que a
+ * festa e o numero, nao um boneco.
+ */
+function FinishedScreen({
+  xp,
+  achievements,
+  onHome,
+}: {
+  xp: number;
+  achievements: string[];
+  onHome: () => void;
+}) {
+  const shown = useCountUp(xp);
+  const date = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+
   return (
-    <div className={`flex-1 rounded-xl border bg-white p-3 ${tone}`}>
-      {/* O valor herda a cor do trofeu: XP e dourado, conquista e violeta. */}
-      <p className="font-mono text-xl font-bold tabular-nums">{value}</p>
-      <p className="text-[11px] leading-tight text-hare">{label}</p>
+    <div className="flex min-h-[100dvh] flex-col bg-snow">
+      <section className="bg-espresso px-5 pb-8 pt-[calc(env(safe-area-inset-top)+3.5rem)]">
+        <div className="mx-auto max-w-md">
+          <p className="animate-fade text-[13px] text-latte first-letter:uppercase">{date}</p>
+          <h1 className="mt-1.5 animate-fade font-display text-3xl font-bold tracking-tight text-white">
+            Missão concluída
+          </h1>
+          <p
+            className={`mt-6 font-display text-[3.25rem] font-bold leading-none tabular-nums text-honey ${
+              shown === xp ? 'animate-glow' : ''
+            }`}
+            aria-label={`Mais ${xp} XP`}
+          >
+            +{shown} XP
+          </p>
+          <p className="mt-4 animate-rise text-sm text-latte [animation-delay:300ms]">
+            O dia de hoje entrou na sua sequência.
+          </p>
+        </div>
+      </section>
+
+      <div className="mx-auto w-full max-w-md flex-1 space-y-3 px-4 pt-6">
+        {achievements.length > 0 && (
+          <>
+            <p className="section-label animate-rise px-1 [animation-delay:600ms]">Novas conquistas</p>
+            <ul className="list-group animate-rise [animation-delay:660ms]">
+              {achievements.map((name, i) => (
+                <li
+                  key={name}
+                  className="list-row animate-rise text-[15px] font-medium text-eel"
+                  style={{ animationDelay: `${720 + i * 90}ms` }}
+                >
+                  {name}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </div>
+
+      <div className="mx-auto w-full max-w-md animate-rise px-4 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] pt-6 [animation-delay:900ms]">
+        <button className="btn-primary w-full" onClick={onHome}>
+          Voltar ao início
+        </button>
+      </div>
     </div>
   );
 }

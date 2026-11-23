@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { Hero } from './components/Hero';
 import { Layout } from './components/Layout';
 import { AnalyticsPage } from './features/analytics/AnalyticsPage';
 import { LoginPage } from './features/auth/LoginPage';
@@ -42,12 +41,13 @@ export function App() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-3">
-        {/* A coruja aqui era resto de uma fase anterior do visual -- nao
-            pertencia nem ao diario sobrio nem a expedicao. Quem espera agora e
-            o proprio personagem, correndo. */}
-        <Hero mood="focus" size="lg" accent="text-macaw" />
-        <p className="font-bold text-wolf">Abrindo sua sessão...</p>
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-espresso">
+        <span className="animate-fade font-display text-5xl font-bold tracking-tight text-white">4L</span>
+        <span className="flex gap-1.5" role="status" aria-label="Abrindo sua sessão">
+          <span className="h-1.5 w-1.5 animate-dot rounded-full bg-honey" />
+          <span className="h-1.5 w-1.5 animate-dot rounded-full bg-honey [animation-delay:150ms]" />
+          <span className="h-1.5 w-1.5 animate-dot rounded-full bg-honey [animation-delay:300ms]" />
+        </span>
       </div>
     );
   }

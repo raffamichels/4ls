@@ -66,16 +66,16 @@ export function SentenceBuilder({
         type="button"
         disabled={answered}
         onClick={onClick}
-        className={`tap-target rounded-md border px-3 py-2 text-left transition-colors ${
-          placedStyle ? 'border-macaw bg-white' : 'border-swan bg-white'
+        className={`tap-target press rounded-lg border border-b-2 border-[#E3D8CF] bg-white px-3 py-2 text-left ${
+          placedStyle ? 'animate-pop' : ''
         }`}
       >
         {showLabels && (
-          <span className="block font-mono text-[10px] uppercase leading-tight text-hare">
+          <span className="block text-[11px] leading-tight text-hare">
             {chunk.label}
           </span>
         )}
-        <span lang={languageCode} className="block font-serif text-xl text-eel">
+        <span lang={languageCode} className="block text-lg font-medium text-eel">
           {chunk.text}
         </span>
       </button>
@@ -85,14 +85,14 @@ export function SentenceBuilder({
   return (
     <>
       <div className="space-y-2">
-        <p className="font-serif text-lg font-semibold leading-snug text-eel">Monte a frase:</p>
-        <p className="font-serif text-xl leading-snug text-macaw-dark">{prompt}</p>
+        <p className="text-[13px] text-wolf">Monte a frase</p>
+        <p className="font-display text-2xl font-semibold leading-snug tracking-tight text-eel">{prompt}</p>
       </div>
 
       {/* Altura mínima para a tela não pular a cada toque. */}
-      <div className="flex min-h-[5rem] flex-wrap items-end gap-2 rounded-xl border border-swan bg-snow p-3">
+      <div className="flex min-h-[7.25rem] flex-wrap content-start items-end gap-x-1.5 gap-y-4 bg-[linear-gradient(to_bottom,transparent_calc(3.5rem-1.5px),#D9CEC5_calc(3.5rem-1.5px),#D9CEC5_3.5rem,transparent_3.5rem)] bg-[length:100%_3.5rem] pt-2.5">
         {placed.length === 0 && (
-          <p className="self-center text-sm text-hare">Toque nas peças abaixo, na ordem.</p>
+          <p className="pb-3 text-sm text-hare">Toque nas peças abaixo, na ordem.</p>
         )}
         {placed.map((chunkIndex, position) => (
           <Piece
@@ -104,7 +104,7 @@ export function SentenceBuilder({
         ))}
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap justify-center gap-2 pt-4">
         {available.map((chunkIndex) => (
           <Piece
             key={chunkIndex}
@@ -117,7 +117,7 @@ export function SentenceBuilder({
 
       {!answered && (
         <button
-          className="btn-primary w-full py-3"
+          className="btn-primary w-full"
           disabled={!complete}
           onClick={() => onAnswer(placed.map((i) => chunks[i].text).join(' ') === answer)}
         >

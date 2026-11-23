@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { AnswerOption } from '../../components/AnswerOption';
 import { AudioButton } from '../../components/AudioButton';
-import { Hero } from '../../components/Hero';
+import { StatusMark } from '../../components/StatusMark';
 import { LessonFooter, SkipButton } from '../../components/LessonFooter';
 import { ProgressBar } from '../../components/ProgressBar';
 import { SentenceBuilder } from '../../components/SentenceBuilder';
@@ -129,7 +129,6 @@ function Briefing({
     <>
       <div className="space-y-4">
         <div className="card flex flex-col items-center gap-3 text-center">
-          <Hero mood="idle" size="md" accent="text-bee" />
 
           <div>
             <p className="section-title">Chefe de fase</p>
@@ -426,11 +425,7 @@ function Result({
     <>
       <div className="space-y-4">
         <div className="card flex flex-col items-center gap-2 text-center">
-          <Hero
-            mood={result.passed ? 'cheer' : 'sad'}
-            size="lg"
-            accent={result.passed ? 'text-grass' : 'text-wolf'}
-          />
+          <StatusMark tone={result.passed ? 'correct' : 'wrong'} size="lg" />
 
           {result.passed ? (
             <>

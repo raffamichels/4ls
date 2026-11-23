@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Hero } from '../../components/Hero';
 import { browserCanRecognize, recognizeInBrowser, useSpeaker } from '../../lib/speech';
 import { languageTheme } from '../../lib/ui';
 
@@ -192,18 +191,33 @@ export function HandsFree({
         </p>
       </div>
 
-      <Hero
-        mood={state === 'speaking' ? 'cheer' : state === 'off' ? 'idle' : 'focus'}
-        size="md"
-        accent={state === 'off' ? 'text-hare' : 'text-macaw'}
-        className="mx-auto"
-      />
+      {/*
+        No lugar do personagem, o proprio microfone: um circulo que pulsa
+        enquanto escuta. E o estado que importa nesta tela -- "ele esta me
+        ouvindo?" -- dito sem precisar ler o rotulo.
+      */}
+      <span className="relative mx-auto flex h-16 w-16 items-center justify-center">
+        {state === 'listening' && (
+          <span className="absolute inset-0 animate-ring rounded-full bg-accent" aria-hidden />
+        )}
+        <span
+          className={`relative flex h-16 w-16 items-center justify-center rounded-full text-white transition-colors duration-300 ${
+            state === 'off' ? 'bg-swan text-hare' : state === 'listening' ? 'bg-accent' : 'bg-espresso'
+          }`}
+          aria-hidden
+        >
+          <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+            <rect x="9" y="3" width="6" height="11" rx="3" />
+            <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
+          </svg>
+        </span>
+      </span>
 
       <div className="flex items-center justify-center gap-2">
         <span
           className={`h-2.5 w-2.5 rounded-full ${
             state === 'listening'
-              ? 'animate-halo bg-cardinal'
+              ? 'animate-pulse bg-accent'
               : state === 'off'
                 ? 'bg-swan'
                 : `${theme.bg}`

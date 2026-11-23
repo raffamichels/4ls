@@ -19,42 +19,32 @@
   html {
     -webkit-tap-highlight-color: transparent;
     /*
-      A pagina nao anda de lado. Nenhuma tela tem conteudo mais largo que a
-      janela -- ja conferido a 360px --, mas no celular dava para arrastar a
-      pagina para o lado assim mesmo e abrir uma faixa vazia: e o elastico do
-      iOS, que ao chegar ao fim de uma faixa rolavel propaga o gesto para o
-      documento.
-
-      `clip` e nao `hidden` de proposito: `hidden` transformaria o <html> em
-      container de rolagem e quebraria o `position: sticky` do cabecalho e das
-      abas. `clip` corta sem criar container.
+      A pagina nao anda de lado. `clip` e nao `hidden` de proposito: `hidden`
+      transformaria o <html> em container de rolagem e quebraria o
+      `position: sticky`. `clip` corta sem criar container.
     */
     overflow-x: clip;
-    /*
-      O tema e escuro por construcao, entao os controles nativos (barra de
-      rolagem, campo de data, menu de select) precisam saber disso -- senao
-      aparecem brancos no meio da tela escura.
-    */
-    color-scheme: dark;
+    color-scheme: light;
   }
   body {
     @apply bg-snow font-sans text-eel antialiased;
     /*
-      Conteudo de estudo quebra palavra quando nao cabe. Um composto alemao
-      ("Geschwindigkeitsbegrenzung") ou um termo russo longo estourava a largura
-      em 360px e empurrava a tela inteira na horizontal. `break-word` so quebra
-      quando a palavra realmente nao cabe -- nao afeta o resto do texto.
+      Conteudo de estudo quebra palavra quando nao cabe (compostos alemaes em
+      360px). `break-word` so quebra quando a palavra realmente nao cabe.
     */
     overflow-wrap: break-word;
-    /*
-      Ceu de expedicao: dois halos frios muito suaves no topo. Fixos, para nao
-      andarem com a rolagem, e fracos o bastante para nunca competirem com o
-      conteudo -- eles existem para o fundo nao ser uma chapa morta.
-    */
-    background-image:
-      radial-gradient(60rem 28rem at 12% -8%, rgba(76, 201, 240, 0.1), transparent 60%),
-      radial-gradient(48rem 24rem at 92% -4%, rgba(177, 92, 255, 0.1), transparent 60%);
-    background-attachment: fixed;
+  }
+  /*
+    `font-mono` virou "numero", nao "terminal" (ver tailwind.config.js): o que
+    ele precisa garantir e que o valor nao dance quando muda.
+  */
+  .font-mono {
+    font-variant-numeric: tabular-nums;
+  }
+  code,
+  kbd,
+  pre {
+    @apply font-code;
   }
   /* Nada de texto selecionado por acidente ao clicar rapido nos botoes de resposta. */
   button {
@@ -63,151 +53,166 @@
 }
 
 @layer components {
-  /*
-    Painel. A borda clara de cima e o que da volume no escuro: sem ela, cartao
-    escuro sobre fundo escuro vira uma mancha sem limite.
-  */
+  /* Painel: branco sobre o creme, sem borda -- o contraste ja separa. */
   .card {
-    @apply rounded-xl border border-swan bg-white p-5;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.05),
-      0 1px 2px rgba(0, 0, 0, 0.4);
+    @apply rounded-2xl bg-white p-5;
   }
 
   /*
-    Botao com PROFUNDIDADE.
-
-    A borda inferior grossa e a "espessura" da peca, e ela desaparece no toque
-    enquanto o botao desce os mesmos 4px -- o dedo afunda a peca de verdade. E o
-    que separa um botao de app de um botao de jogo, e custa duas linhas.
-
-    `active:` e nao `:hover` porque o alvo e o celular, onde hover nao existe.
+    Botao. O relevo de "peca de jogo" (borda inferior grossa) saiu: era um dos
+    tracos que denunciavam o visual gerado. O toque continua tendo resposta
+    fisica -- o botao encolhe um pouco --, so que sem a espessura.
   */
   .btn {
-    @apply relative inline-flex select-none items-center justify-center gap-2
-           rounded-xl border-b-4 px-5 py-3
-           text-sm font-bold uppercase tracking-wide
-           transition-[transform,background-color,border-color] duration-75
-           active:translate-y-[4px] active:border-b-0
-           disabled:pointer-events-none disabled:translate-y-0;
+    @apply relative inline-flex min-h-[3.25rem] select-none items-center justify-center gap-2
+           rounded-xl px-5 py-3
+           text-base font-semibold
+           transition-[transform,background-color,color,opacity] duration-150 ease-out
+           active:scale-[0.97]
+           disabled:pointer-events-none disabled:opacity-45;
   }
   .btn-primary {
-    @apply btn border-b-[#1F9E6E] bg-grass text-snow
-           hover:bg-grass-dark
-           disabled:border-b-swan disabled:bg-swan disabled:text-hare;
+    @apply btn bg-accent text-white hover:bg-accent-dark;
   }
   .btn-blue {
-    @apply btn border-b-[#2A8FB0] bg-macaw text-snow
-           hover:bg-macaw-dark
-           disabled:border-b-swan disabled:bg-swan disabled:text-hare;
+    @apply btn bg-espresso text-white hover:bg-espresso-2;
   }
   .btn-danger {
-    @apply btn border-b-[#C03D50] bg-cardinal text-snow hover:bg-cardinal-dark;
+    @apply btn bg-cardinal text-white hover:bg-cardinal-dark;
   }
-  /* Peca vazada: mesma espessura, sem preenchimento. */
   .btn-ghost {
-    @apply btn border border-swan border-b-4 border-b-swan bg-white text-wolf
-           hover:border-hare hover:text-eel;
+    @apply btn border border-swan bg-transparent text-eel hover:bg-white;
   }
-  /* Acao secundaria discreta: sem peca, sem profundidade -- ela nao compete. */
+  /* Acao secundaria discreta: sem peca -- ela nao compete. */
   .btn-plain {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-3 py-3
-           text-sm font-semibold text-hare transition-colors
-           hover:text-eel disabled:pointer-events-none;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-3 py-2
+           text-sm font-medium text-wolf transition-[color,transform] duration-150
+           hover:text-eel active:scale-[0.96] disabled:pointer-events-none;
   }
 
   .input {
-    @apply w-full rounded-xl border-2 border-swan bg-snow px-4 py-3 text-base font-normal
+    @apply w-full rounded-xl border border-swan bg-white px-4 py-3 text-base font-normal
            text-eel placeholder:text-hare
-           outline-none transition focus:border-macaw;
+           outline-none transition-[border-color,box-shadow] duration-200
+           focus:border-accent focus:ring-1 focus:ring-accent;
   }
   .label {
-    @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-wolf;
+    @apply mb-1.5 block text-[13px] font-semibold text-eel;
   }
   .chip {
-    @apply inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-bold
-           border-swan text-wolf;
+    @apply inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold
+           bg-accent-soft text-accent-dark;
   }
   .section-title {
-    @apply font-serif text-sm font-bold uppercase tracking-wide text-eel;
+    @apply font-display text-base font-semibold text-eel;
   }
   /* Rotulo menor, para subdivisoes dentro de uma secao ja titulada. */
   .section-label {
-    @apply text-xs font-semibold text-wolf;
+    @apply text-[13px] font-medium text-wolf;
+  }
+  /* Titulo grande de tela, no lugar do cabecalho fixo que saiu. */
+  .page-title {
+    @apply font-display text-[2rem] font-bold leading-tight tracking-[-0.02em] text-eel;
+  }
+
+  /*
+    Lista agrupada: um painel branco com linhas separadas por fio. E o que
+    substituiu a grade de cartoes iguais.
+  */
+  .list-group {
+    @apply overflow-hidden rounded-xl bg-white;
+  }
+  .list-row {
+    @apply flex min-h-14 items-center gap-3 px-4 transition-colors duration-150 active:bg-[#F6EEE8];
+  }
+  .list-row + .list-row {
+    @apply border-t border-[#F1EAE4];
+  }
+
+  /* Seletor de duas ou tres opcoes, com o polegar branco. */
+  .segmented {
+    @apply relative grid auto-cols-fr grid-flow-col gap-[3px] rounded-[10px] bg-[#EDE3DB] p-[3px];
+  }
+  .segmented > button,
+  .segmented > a {
+    @apply relative z-10 flex min-h-9 items-center justify-center rounded-lg text-sm font-medium text-wolf
+           transition-[color,transform] duration-200 active:scale-[0.96];
+  }
+  .segmented > [aria-current='page'],
+  .segmented > [aria-pressed='true'] {
+    @apply font-semibold text-eel;
+  }
+  .segmented-thumb {
+    @apply absolute bottom-[3px] left-[3px] top-[3px] rounded-lg bg-white shadow-[0_1px_2px_rgba(43,40,38,.12)]
+           transition-transform duration-300 ease-out;
   }
 
   /*
     Espaco que o conteudo rolavel precisa deixar no pe para nao terminar atras
-    das barras fixas. Substitui os `pb-44`/`pb-32` chutados: as duas alturas sao
-    medidas de verdade, entao um rodape alto (resultado longo) reserva mais.
+    das barras fixas.
   */
   .lesson-pad {
     padding-bottom: calc(var(--lesson-footer-h, 9rem) + var(--tabbar-h, 0px) + 1.5rem);
   }
 
-  /*
-    Alvo de toque minimo. 44px e o piso da Apple HIG e o que a auditoria apontou
-    faltando nos controles mais usados (chips de montagem, botao de audio).
-  */
+  /* Alvo de toque minimo: 44px, o piso da Apple HIG. */
   .tap-target {
     @apply min-h-11 min-w-11;
   }
 
   /*
-    Faixa que rola na horizontal de proposito (filtros, tira comparativa,
-    tabela larga). `overscroll-x-contain` e o que impede o gesto de vazar para
-    a pagina quando a faixa chega ao fim -- sem isso, arrastar os filtros
-    balanca a tela inteira de lado no iOS.
+    Faixa que rola na horizontal de proposito. `overscroll-x-contain` impede o
+    gesto de vazar para a pagina quando a faixa chega ao fim.
   */
   .hscroll {
     @apply overflow-x-auto overscroll-x-contain;
   }
 
-  /*
-    Numero de recompensa: XP, sequencia, nivel. Tabular para nao dancar quando
-    o valor muda, e dourado porque premio tem uma cor so no app inteiro.
-  */
+  /* Numero de recompensa: XP, sequencia, nivel. */
   .stat {
-    @apply font-mono font-bold tabular-nums text-bee;
+    @apply font-semibold tabular-nums text-bee;
   }
 }
 
 @layer utilities {
-  /*
-    Brilho atras de um elemento -- o no ativo da trilha, o personagem, a barra
-    cheia.
-
-    `drop-shadow` e nao `box-shadow` de proposito: ele aceita `currentColor`, o
-    que faz o brilho herdar a cor de quem chama (`text-grass` brilha verde,
-    `text-humpback` brilha violeta) sem uma classe por cor. E, ao contrario do
-    `box-shadow`, ele segue a FORMA real do elemento -- entao o halo de um no
-    redondo sai redondo, e o de um SVG segue o desenho em vez da caixa.
-
-    A alternativa moderna seria `rgb(from currentColor ...)`, que e mais direta
-    e ainda nova demais para um PWA que roda no navegador do celular.
-  */
-  .glow {
-    filter: drop-shadow(0 0 5px currentColor);
-  }
-  .glow-strong {
-    filter: drop-shadow(0 0 4px currentColor) drop-shadow(0 0 14px currentColor);
+  /* Qualquer coisa tocavel que nao seja .btn: afunda um pouco no toque. */
+  .press {
+    @apply transition-transform duration-150 ease-out active:scale-[0.96];
   }
 
-  /*
-    Quem prefere menos movimento nao recebe nenhum.
+  /* O icone da aba afunda no toque; a pilula da aba ativa ja e animada. */
+  .tab-ico {
+    @apply transition-transform duration-150 ease-out;
+  }
+  .tab:active .tab-ico {
+    transform: scale(0.86);
+  }
 
-    O personagem tem a propria trava, em JavaScript: ele para num quadro so em
-    vez de perder a animacao e sumir. Aqui ficam os movimentos puramente
-    decorativos -- halo, brilho, flutuacao --, que nao carregam informacao
-    nenhuma e por isso podem simplesmente parar.
+  /* Contorno de letra, para o fundo do login. */
+  .text-outline {
+    -webkit-text-stroke: 1.2px theme('colors.bee');
+    color: transparent;
+  }
+
+  /* O visto que se desenha: o path precisa deste tracejado para `animate-draw`. */
+  .dash-30 {
+    stroke-dasharray: 30;
+  }
+
+  /*
+    Quem prefere menos movimento nao recebe nenhum. Entradas, pulsos, fundos
+    correndo -- nada disso carrega informacao, entao tudo pode simplesmente
+    parar. O que muda de estado (barra mudando de valor) continua mudando, so
+    que sem a transicao.
   */
   @media (prefers-reduced-motion: reduce) {
-    .animate-float,
-    .animate-halo,
-    .animate-sheen,
-    .animate-wiggle,
-    .animate-pop {
-      animation: none !important;
+    *,
+    *::before,
+    *::after {
+      animation-duration: 1ms !important;
+      animation-iteration-count: 1 !important;
+      animation-delay: 0ms !important;
+      transition-duration: 1ms !important;
     }
   }
 }

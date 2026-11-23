@@ -3,6 +3,7 @@ import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api, errorMessage } from '../../services/api';
 import { useAuthStore } from '../../stores/auth.store';
+import { AuthShell, UnderlineField } from './AuthShell';
 
 export function LoginPage() {
   const [email, setEmail] = useState('');
@@ -27,53 +28,53 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6 px-5 py-10">
-      <div className="text-center">
-        <h1 className="font-serif text-3xl font-semibold tracking-tight text-eel">4L</h1>
-        <p className="mt-1 font-mono text-xs text-hare">diário de bordo</p>
-        <p className="mt-2 text-sm text-wolf">Inglês e alemão. Uma hora por dia.</p>
-      </div>
-
-      <form onSubmit={handleSubmit} className="card w-full max-w-sm space-y-4">
-        <div>
-          <label className="label">E-mail</label>
-          <input
-            className="input"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label className="label">Senha</label>
-          <input
-            className="input"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
+    <AuthShell title="Entrar">
+      <form onSubmit={handleSubmit} className="flex flex-1 flex-col">
+        <UnderlineField
+          label="E-mail"
+          icon="mail"
+          type="email"
+          autoComplete="email"
+          placeholder="voce@exemplo.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          delay={220}
+        />
+        <UnderlineField
+          label="Senha"
+          icon="lock"
+          type="password"
+          autoComplete="current-password"
+          placeholder="Sua senha"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          delay={300}
+        />
 
         {mutation.isError && (
-          <p className="rounded-md bg-cardinal-soft px-3 py-2 text-sm text-cardinal-dark">
+          <p
+            key={mutation.submittedAt}
+            className="mt-4 animate-shake rounded-xl bg-cardinal-soft px-3 py-2 text-sm text-cardinal-dark"
+            role="alert"
+          >
             {errorMessage(mutation.error)}
           </p>
         )}
 
-        <button type="submit" className="btn-primary w-full py-4" disabled={mutation.isPending}>
-          {mutation.isPending ? 'Entrando...' : 'Entrar'}
-        </button>
-
-        <p className="text-center text-sm text-wolf">
-          Ainda não tem conta?{' '}
-          <Link to="/register" className="text-macaw hover:underline">
-            Criar conta
-          </Link>
-        </p>
+        <div className="mt-auto animate-rise pt-8 [animation-delay:400ms]">
+          <button type="submit" className="btn-primary w-full" disabled={mutation.isPending}>
+            {mutation.isPending ? 'Entrando...' : 'Entrar'}
+          </button>
+          <p className="mt-3 text-center text-sm text-wolf">
+            Primeira vez aqui?{' '}
+            <Link to="/register" className="font-semibold text-accent hover:text-accent-dark">
+              Criar conta
+            </Link>
+          </p>
+        </div>
       </form>
-    </div>
+    </AuthShell>
   );
 }

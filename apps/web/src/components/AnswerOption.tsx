@@ -3,10 +3,10 @@ import { ReactNode } from 'react';
 export type OptionState = 'idle' | 'selected' | 'correct' | 'wrong';
 
 const STATE: Record<OptionState, string> = {
-  idle: 'border-swan bg-white text-eel',
-  selected: 'border-macaw bg-macaw-soft text-macaw-dark',
-  correct: 'border-grass bg-grass-soft text-grass-dark',
-  wrong: 'border-cardinal bg-cardinal-soft text-cardinal-dark',
+  idle: 'border-transparent bg-white text-eel',
+  selected: 'border-accent bg-accent-soft text-accent-dark',
+  correct: 'animate-pop border-grass bg-grass-soft text-grass-dark',
+  wrong: 'animate-shake border-cardinal bg-cardinal-soft text-cardinal-dark',
 };
 
 /**
@@ -40,8 +40,8 @@ export function AnswerOption({
       lang={lang}
       onClick={onClick}
       disabled={disabled}
-      className={`flex min-h-12 w-full items-center rounded-md border px-4 py-3 text-left text-base
-                  transition-colors disabled:cursor-default ${STATE[state]}`}
+      className={`press flex min-h-12 w-full items-center rounded-xl border-[1.5px] px-4 py-3 text-left text-base
+                  transition-[background-color,border-color,color,transform] duration-200 disabled:cursor-default ${STATE[state]}`}
     >
       {children}
     </button>

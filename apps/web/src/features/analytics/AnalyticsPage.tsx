@@ -77,7 +77,7 @@ export function AnalyticsPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="font-serif text-2xl font-semibold tracking-tight text-eel">Progresso</h1>
+        <h1 className="section-title">Progresso</h1>
         <p className="text-sm text-wolf">XP mede consistência. CEFR mede competência.</p>
       </header>
 

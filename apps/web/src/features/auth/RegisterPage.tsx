@@ -3,6 +3,7 @@ import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api, errorMessage } from '../../services/api';
 import { useAuthStore } from '../../stores/auth.store';
+import { AuthShell, UnderlineField } from './AuthShell';
 
 export function RegisterPage() {
   const [name, setName] = useState('');
@@ -28,60 +29,63 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6 px-5 py-10">
-      <div className="text-center">
-        <h1 className="font-serif text-3xl font-semibold tracking-tight text-eel">4L</h1>
-        <p className="mt-1 font-mono text-xs text-hare">diário de bordo</p>
-        <p className="mt-2 text-sm text-wolf">Sua conta já começa com inglês e alemão.</p>
-      </div>
-
-      <form onSubmit={handleSubmit} className="card w-full max-w-sm space-y-4">
-        <div>
-          <label className="label">Nome</label>
-          <input className="input" value={name} onChange={(e) => setName(e.target.value)} required />
-        </div>
-
-        <div>
-          <label className="label">E-mail</label>
-          <input
-            className="input"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label className="label">Senha</label>
-          <input
-            className="input"
-            type="password"
-            minLength={8}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <p className="mt-1 text-xs text-hare">Mínimo de 8 caracteres.</p>
-        </div>
+    <AuthShell title="Criar conta">
+      <form onSubmit={handleSubmit} className="flex flex-1 flex-col">
+        <UnderlineField
+          label="Nome"
+          icon="user"
+          autoComplete="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          delay={220}
+        />
+        <UnderlineField
+          label="E-mail"
+          icon="mail"
+          type="email"
+          autoComplete="email"
+          placeholder="voce@exemplo.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          delay={280}
+        />
+        <UnderlineField
+          label="Senha"
+          icon="lock"
+          type="password"
+          autoComplete="new-password"
+          minLength={8}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          hint="Mínimo de 8 caracteres."
+          delay={340}
+        />
 
         {mutation.isError && (
-          <p className="rounded-md bg-cardinal-soft px-3 py-2 text-sm text-cardinal-dark">
+          <p
+            key={mutation.submittedAt}
+            className="mt-4 animate-shake rounded-xl bg-cardinal-soft px-3 py-2 text-sm text-cardinal-dark"
+            role="alert"
+          >
             {errorMessage(mutation.error)}
           </p>
         )}
 
-        <button type="submit" className="btn-primary w-full py-4" disabled={mutation.isPending}>
-          {mutation.isPending ? 'Criando...' : 'Criar conta'}
-        </button>
-
-        <p className="text-center text-sm text-wolf">
-          Já tem conta?{' '}
-          <Link to="/login" className="text-macaw hover:underline">
-            Entrar
-          </Link>
-        </p>
+        <div className="mt-auto animate-rise pt-8 [animation-delay:420ms]">
+          <button type="submit" className="btn-primary w-full" disabled={mutation.isPending}>
+            {mutation.isPending ? 'Criando...' : 'Criar conta'}
+          </button>
+          <p className="mt-3 text-center text-sm text-wolf">
+            Já tem conta?{' '}
+            <Link to="/login" className="font-semibold text-accent hover:text-accent-dark">
+              Entrar
+            </Link>
+          </p>
+        </div>
       </form>
-    </div>
+    </AuthShell>
   );
 }

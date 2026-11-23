@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ProgressBar } from '../../components/ProgressBar';
+import { Segmented } from '../../components/Segmented';
 import { languageTheme, scoreTone } from '../../lib/ui';
 import { api } from '../../services/api';
 import { InterferencePanel } from './InterferencePanel';
@@ -18,8 +19,8 @@ import { TopicSummary } from './types';
  * nenhum sinal de que havia algo ali.
  */
 const LANGUAGES = [
-  { code: 'en', label: 'English', short: 'EN' },
-  { code: 'de', label: 'Deutsch', short: 'DE' },
+  { code: 'en', label: 'Inglês', short: 'EN' },
+  { code: 'de', label: 'Alemão', short: 'DE' },
 ];
 
 /**
@@ -76,36 +77,19 @@ export function GrammarPage() {
     // margem lateral. Repetir aqui comia 32px dos 360px do celular.
     <div className="space-y-5">
       <header className="space-y-1">
-        <h1 className="font-serif text-2xl font-semibold text-eel">Estruturas</h1>
+        <h1 className="page-title">Estruturas</h1>
         <p className="text-sm text-wolf">
           Cada ponto aparece comparado nos cinco idiomas. Você aprende um usando os outros
           como referência — um que confirma sua intuição e um que a quebra.
         </p>
       </header>
 
-      <div className="flex gap-2">
-        {LANGUAGES.map((option) => {
-          const theme = languageTheme(option.code);
-          const active = option.code === language;
-          return (
-            <button
-              key={option.code}
-              onClick={() => setLanguage(option.code)}
-              // `tap-target` porque com quatro idiomas o botao ja e estreito;
-              // se for tambem baixo (38px) vira o controle mais errado da tela.
-              className={`tap-target flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-md border px-2 py-2 text-sm font-medium transition-colors ${
-                active
-                  ? `${theme.border} ${theme.soft} ${theme.text}`
-                  : 'border-swan bg-white text-wolf hover:bg-snow'
-              }`}
-            >
-              <span aria-hidden>{theme.mark}</span>
-              <span className="sm:hidden">{option.short}</span>
-              <span className="hidden truncate sm:inline">{option.label}</span>
-            </button>
-          );
-        })}
-      </div>
+      <Segmented
+        label="Idioma"
+        options={LANGUAGES.map((option) => ({ value: option.code, label: option.label }))}
+        value={language}
+        onChange={setLanguage}
+      />
 
       {/*
         Vem antes da lista de topicos de proposito: o que o aluno esta errando

@@ -54,7 +54,7 @@ export function ReferencePage() {
   return (
     <div className="space-y-5">
       <header>
-        <h1 className="font-serif text-2xl font-bold text-eel">Consulta</h1>
+        <h1 className="section-title">Consulta</h1>
         <p className="text-sm text-wolf">
           As tabelas que você olha no meio do estudo. Aqui nada é cobrado.
         </p>

@@ -1,20 +1,26 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { useHeightVar } from '../lib/metrics';
-import { Hero } from './Hero';
+import { StatusMark } from './StatusMark';
 
 type Tone = 'neutral' | 'correct' | 'wrong';
 
 const TONE: Record<Tone, { wrap: string; title: string; detail: string }> = {
-  neutral: { wrap: 'border-swan bg-white', title: 'text-eel', detail: 'text-wolf' },
+  neutral: { wrap: 'border-swan bg-snow', title: 'text-eel', detail: 'text-wolf' },
+  /*
+   * Acerto e erro viram uma folha branca subindo, com cantos arredondados e
+   * sombra -- e a cor fica no selo e no titulo, nao na barra inteira. Faixa
+   * verde ou vermelha de ponta a ponta era o padrao de app de quiz que este
+   * redesenho veio tirar.
+   */
   correct: {
-    wrap: 'border-grass bg-grass-soft',
+    wrap: 'animate-slide-up rounded-t-3xl border-transparent bg-white shadow-[0_-8px_24px_rgba(43,40,38,.10)]',
     title: 'text-grass-dark',
-    detail: 'text-grass-dark/80',
+    detail: 'text-wolf',
   },
   wrong: {
-    wrap: 'border-cardinal bg-cardinal-soft',
+    wrap: 'animate-slide-up rounded-t-3xl border-transparent bg-white shadow-[0_-8px_24px_rgba(43,40,38,.10)]',
     title: 'text-cardinal-dark',
-    detail: 'text-cardinal-dark/80',
+    detail: 'text-wolf',
   },
 };
 
@@ -61,17 +67,9 @@ export function LessonFooter({
             gramatica. Pendurar a reacao nele faz os doze blocos ganharem
             comemoracao de uma vez, em vez de doze copias da mesma logica.
           */}
-          {tone !== 'neutral' && (
-            <Hero
-              key={`${tone}-${title ?? ''}`}
-              mood={tone === 'correct' ? 'cheer' : 'sad'}
-              size="sm"
-              accent={tone === 'correct' ? 'text-grass' : 'text-cardinal'}
-              className="shrink-0"
-            />
-          )}
-          <div className="min-w-0 flex-1">
-            {title && <p className={`font-serif text-base font-bold ${style.title}`}>{title}</p>}
+          {tone !== 'neutral' && <StatusMark key={`${tone}-${title ?? ''}`} tone={tone} />}
+          <div key={`${tone}-${title ?? ''}`} className={`min-w-0 flex-1 ${tone !== 'neutral' ? 'animate-rise' : ''}`}>
+            {title && <p className={`font-display text-lg font-semibold ${style.title}`}>{title}</p>}
             {detail && <div className={`text-sm ${style.detail}`}>{detail}</div>}
           </div>
         </div>

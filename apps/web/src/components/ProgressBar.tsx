@@ -21,14 +21,14 @@ export function ProgressBar({
 
   return (
     <div
-      className={`${height} w-full overflow-hidden rounded-sm ${trackClassName}`}
+      className={`${height} w-full overflow-hidden rounded-full ${trackClassName}`}
       role="progressbar"
       aria-valuenow={percentage}
       aria-valuemin={0}
       aria-valuemax={100}
     >
       <div
-        className={`h-full rounded-sm transition-[width] duration-500 ease-out ${tone}`}
+        className={`h-full origin-left animate-fill rounded-full transition-[width] duration-500 ease-out ${tone}`}
         style={{ width: `${percentage}%` }}
       />
     </div>

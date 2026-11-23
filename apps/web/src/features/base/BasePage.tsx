@@ -1,54 +1,53 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 
 /**
  * A Base: tudo que não é a missão do dia.
  *
- * O rodapé tinha seis abas e não cabia mais nada -- "Estruturas" e "Progresso"
- * já ocupavam quase a célula inteira num aparelho de 360px, e a sétima
- * quebraria a barra em duas linhas.
- *
- * O agrupamento não é só economia de espaço, e é isso que faz o nome pegar:
- * consulta, tutor e progresso são as três coisas que o aluno faz ENTRE as
- * missões, não durante. Num acampamento-base você olha o mapa, conversa com o
- * guia e confere o quanto já andou -- e é exatamente isso.
+ * Consulta, tutor e progresso são as três coisas que o aluno faz ENTRE as
+ * missões, não durante -- por isso dividem uma aba só.
  *
  * As rotas antigas continuam existindo e redirecionam para cá: qualquer atalho
  * que ele já tenha salvo na tela inicial do celular continua funcionando.
  */
 
 const SECTIONS = [
-  { to: 'consulta', label: 'Consulta', blurb: 'As tabelas' },
-  { to: 'tutor', label: 'Tutor', blurb: 'Conversa corrigida' },
-  { to: 'progresso', label: 'Progresso', blurb: 'O quanto andou' },
+  { to: 'consulta', label: 'Consulta' },
+  { to: 'tutor', label: 'Tutor' },
+  { to: 'progresso', label: 'Progresso' },
 ];
 
 export function BasePage() {
+  const { pathname } = useLocation();
+  const active = Math.max(
+    0,
+    SECTIONS.findIndex((s) => pathname.startsWith(`/base/${s.to}`)),
+  );
+
   return (
     <div className="space-y-5">
+      <h1 className="page-title animate-rise">Base</h1>
+
       {/*
-        Chips compactos, e não títulos grandes: eles precisam ler como
-        NAVEGAÇÃO. Cada página abaixo mantém o próprio `h1`, e dois títulos do
-        mesmo tamanho na mesma tela competem em vez de se complementarem.
+        Seletor com o polegar branco deslizando até a seção escolhida. O
+        polegar é um elemento só, que anda -- e não três fundos acendendo e
+        apagando --, e é isso que faz a troca parecer movimento.
       */}
-      <nav className="hscroll -mx-4 flex gap-2 px-4 pb-1">
+      <nav className="segmented animate-rise [animation-delay:60ms]" aria-label="Seções da Base">
+        <span
+          className="segmented-thumb w-[calc((100%-12px)/3)]"
+          style={{ transform: `translateX(calc(${active} * (100% + 3px)))` }}
+          aria-hidden
+        />
         {SECTIONS.map((section) => (
-          <NavLink
-            key={section.to}
-            to={section.to}
-            className={({ isActive }) =>
-              `tap-target flex shrink-0 items-center rounded-full border px-4 py-2 text-sm font-bold transition-colors ${
-                isActive
-                  ? 'border-macaw bg-macaw-soft text-macaw-dark'
-                  : 'border-swan text-wolf hover:text-eel'
-              }`
-            }
-          >
+          <NavLink key={section.to} to={section.to}>
             {section.label}
           </NavLink>
         ))}
       </nav>
 
-      <Outlet />
+      <div key={SECTIONS[active].to} className="animate-page">
+        <Outlet />
+      </div>
     </div>
   );
 }
