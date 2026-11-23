@@ -81,13 +81,13 @@ const ACTIVITY_THEMES: Record<string, ActivityTheme> = {
   alphabet: { label: 'Alfabeto', blurb: 'Ler as letras antes das palavras' },
   foundation: { label: 'Fundamentos', blurb: 'As primeiras peças da frase, do zero' },
   review: { label: 'Revisão', blurb: 'Cards que venceram hoje' },
-  vocabulary: { label: 'Vocabulário', blurb: 'O mesmo conceito nos 4 idiomas' },
+  vocabulary: { label: 'Vocabulário', blurb: 'O mesmo conceito em inglês e alemão' },
   structure: { label: 'Estrutura', blurb: 'Como montar a frase neste idioma' },
   // As duas pontas da can-do do dia. Sem entrada aqui, a sessao exibia o tipo
   // cru ("contrast") no lugar do nome do bloco.
-  contrast: { label: 'Contraste', blurb: 'A mesma função nos 4 idiomas' },
+  contrast: { label: 'Contraste', blurb: 'A mesma função em inglês e alemão' },
   compare: { label: 'Comparação', blurb: 'A mesma função, de memória' },
-  production: { label: 'Produção', blurb: 'A mesma frase nos 4 idiomas' },
+  production: { label: 'Produção', blurb: 'A mesma frase em inglês e alemão' },
   grammar: { label: 'Gramática', blurb: 'Estrutura e formas' },
   // Só existe em alemão e russo: é o bloco que ensina a palavra a mudar de
   // forma, que é o que a estrutura e o vocabulário não ensinam.
@@ -97,7 +97,7 @@ const ACTIVITY_THEMES: Record<string, ActivityTheme> = {
   traps: { label: 'Armadilhas', blurb: 'Um idioma entrando no outro' },
   listening: { label: 'Escuta', blurb: 'Diálogo falado + compreensão' },
   dictation: { label: 'Ditado', blurb: 'Ouvir e escrever' },
-  reading: { label: 'Leitura', blurb: 'A mesma história nos 4 idiomas' },
+  reading: { label: 'Leitura', blurb: 'A mesma história em inglês e alemão' },
   speaking: { label: 'Fala', blurb: 'Falar e ser corrigido' },
   // Repetir uma frase pronta por cima da voz nativa: treina ritmo, que é o que
   // a fala livre não treina.

@@ -59,11 +59,16 @@ export class TrapsService {
     }
 
     const errors = await this.errorRows(userId, languageCode);
+    const enrolled = await this.prisma.userLanguage.findMany({
+      where: { userId },
+      select: { language: { select: { code: true } } },
+    });
     const items = buildRound({
       languageCode,
       level: userLanguage.currentLevel as string,
       errors,
       sources: sourcesFor(errors, languageCode),
+      allowedSources: ['pt', ...enrolled.map((e) => e.language.code)],
     });
 
     return {

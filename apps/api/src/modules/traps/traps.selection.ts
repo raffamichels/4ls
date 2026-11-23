@@ -110,21 +110,31 @@ export function buildRound(input: {
   errors: ErrorRow[];
   /** Origens que os erros dele acusam, da mais frequente a menos. */
   sources: string[];
+  /**
+   * De onde uma armadilha pode vir: o portugues e os idiomas que ele estuda
+   * HOJE. O catalogo guarda pares com espanhol e russo, da epoca dos quatro
+   * idiomas; sem este filtro eles continuavam caindo na rodada ("o russo nao
+   * tem artigo...") para quem nem estuda russo. Ausente, nao filtra.
+   */
+  allowedSources?: string[];
   limit?: number;
 }): TrapItem[] {
   const limit = input.limit ?? ROUND_SIZE;
+  const allowed = input.allowedSources ? new Set(input.allowedSources) : null;
+  const fits = (item: TrapItem) => !allowed || allowed.has(item.sourceCode);
 
   const own = input.errors
     .filter((e) => e.languageCode === input.languageCode)
     .sort((a, b) => b.occurrenceCount - a.occurrenceCount)
     .map(fromError)
-    .filter((item): item is TrapItem => item !== null);
+    .filter((item): item is TrapItem => item !== null)
+    .filter(fits);
 
   const fromPairs = input.sources.flatMap((source) =>
-    trapsForPair(input.languageCode, source, input.level).map(fromTrap),
+    trapsForPair(input.languageCode, source, input.level).map(fromTrap).filter(fits),
   );
 
-  const rest = trapsForLanguage(input.languageCode, input.level).map(fromTrap);
+  const rest = trapsForLanguage(input.languageCode, input.level).map(fromTrap).filter(fits);
 
   const out: TrapItem[] = [];
   const seen = new Set<string>();

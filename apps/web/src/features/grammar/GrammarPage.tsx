@@ -79,8 +79,8 @@ export function GrammarPage() {
       <header className="space-y-1">
         <h1 className="page-title">Estruturas</h1>
         <p className="text-sm text-wolf">
-          Cada ponto aparece comparado nos cinco idiomas. Você aprende um usando os outros
-          como referência — um que confirma sua intuição e um que a quebra.
+          Cada ponto aparece comparado com o português e com o outro idioma que você estuda: um
+          confirma sua intuição, o outro a quebra.
         </p>
       </header>
 

@@ -72,16 +72,15 @@ describe('supportFor', () => {
     expect(supportFor(topic, 'de').contrast).toBe('en');
   });
 
-  it('so recorre a espanhol ou russo quando nenhum ativo da o contraste', () => {
+  it('nunca usa espanhol ou russo como apoio de um idioma ativo', () => {
+    // Os dois sairam do estudo. Antes eles voltavam como contraste quando nenhum
+    // idioma ativo servia, e o aluno lia "o russo faz diferente" estudando so
+    // ingles e alemao.
     for (const topic of CONTRAST_TOPICS) {
       for (const target of topic.targets.filter((t) => ACTIVE_LANGUAGES.includes(t))) {
         const { ally, contrast } = supportFor(topic, target);
-        const own = topic.groups.find((g) => g.includes(target)) ?? [target];
-        const activeContrast = [...ACTIVE_LANGUAGES, 'pt' as const].some(
-          (l) => l !== target && !own.includes(l),
-        );
-        if (activeContrast) expect(['en', 'de', 'pt'], `${topic.id}/${target}`).toContain(contrast);
-        if (ally && own.includes('pt')) expect(['en', 'de', 'pt']).toContain(ally);
+        expect([null, 'en', 'de', 'pt'], `${topic.id}/${target} aliado`).toContain(ally);
+        expect([null, 'en', 'de', 'pt'], `${topic.id}/${target} contraste`).toContain(contrast);
       }
     }
   });
@@ -97,14 +96,13 @@ describe('supportFor', () => {
     expect(topic.bridge, 'topico sem aliado precisa de bridge').toBeTruthy();
   });
 
-  it('usa o russo como aliado do alemao nos casos', () => {
-    // O ponto do modulo inteiro, agora com quatro idiomas: quem estuda alemao e
-    // russo ao mesmo tempo nao precisa aprender "caso" duas vezes. Antes do
-    // russo entrar, este topico nao tinha aliado nenhum.
+  it('o alemao fica sem aliado nos casos e se apoia no bridge', () => {
+    // O aliado natural do alemao aqui era o russo, que saiu. O topico continua
+    // de pe pelo `bridge`: o portugues e o ingles ja tem caso nos pronomes.
     const topic = CONTRAST_TOPICS.find((t) => t.id === 'cases')!;
-    expect(supportFor(topic, 'de').ally).toBe('ru');
-    expect(supportFor(topic, 'ru').ally).toBe('de');
+    expect(supportFor(topic, 'de').ally).toBeNull();
     expect(supportFor(topic, 'de').contrast).toBe('en');
+    expect(topic.bridge).toBeTruthy();
   });
 
   it('nunca aponta o proprio alvo como apoio', () => {

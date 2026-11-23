@@ -117,7 +117,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'Él está aburrido.',
         de: 'Er langweilt sich.',
         ru: 'Ему скучно.',
-        note: 'Em espanhol muda só o verbo. Em inglês muda o adjetivo (boring/bored). Em alemão vira reflexivo. Em russo a pessoa vai para o dativo e a frase fica impessoal: "a ele está entediante".',
+        note: 'Em português muda só o verbo (é/está). Em inglês muda o adjetivo (boring/bored). Em alemão vira reflexivo (sich langweilen).',
       },
     ],
     trap: {
@@ -126,7 +126,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
       why: 'O inglês não distingue no verbo, então distingue no adjetivo: -ing é o que a coisa causa, -ed é o que você sente. Dizer "I am boring" é se declarar uma pessoa chata.',
     },
     bridge:
-      'Olhe a sequência: português e espanhol usam dois verbos, inglês e alemão usam um, e o russo usa zero. Não são quatro sistemas aleatórios, é uma mesma escala de quanto trabalho a língua joga no verbo. Onde o verbo some, o trabalho não desaparece: ele reaparece no adjetivo (bored/boring), no reflexivo (sich langweilen) ou no caso (ему скучно). Ao aprender qualquer um dos três, a pergunta útil não é "qual é o verbo", é "para onde foi a distinção".',
+      'Olhe a sequência: o português usa dois verbos, inglês e alemão usam um só. Não é que a distinção tenha sumido, é uma questão de quanto trabalho a língua joga no verbo. Onde o verbo some, o trabalho não desaparece: ele reaparece no adjetivo (bored/boring) em inglês ou no reflexivo (sich langweilen) em alemão. Ao aprender qualquer um dos dois, a pergunta útil não é "qual é o verbo", é "para onde foi a distinção".',
     level: 'A1',
   },
   {
@@ -153,7 +153,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'Me levanto temprano.',
         de: 'Ich stehe früh auf.',
         ru: 'Я встаю рано.',
-        note: 'Inglês e alemão têm as duas peças (get + up / stehe + auf). Português e espanhol resolvem com reflexivo. O russo tem o prefixo (в-ставать), mas grudado.',
+        note: 'Inglês e alemão têm as duas peças (get + up / stehe + auf). O português resolve com um verbo reflexivo, numa peça só.',
       },
       {
         gloss: 'desistir',
@@ -200,11 +200,11 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'El hombre ve al perro.',
         de: 'Der Mann sieht den Hund.',
         ru: 'Человек видит собаку.',
-        note: 'Alemão e russo marcam quem é visto (den Hund, собаку). Em português, espanhol e inglês a palavra é idêntica — só mudou de lugar.',
+        note: 'O alemão marca quem é visto (der Hund virou den Hund). Em português e inglês a palavra é idêntica — só mudou de lugar.',
       },
     ],
     bridge:
-      'Você já usa casos todos os dias, só que apenas nos pronomes: "eu" vira "me" e "mim" conforme a função ("eu vi", "me viu", "para mim"). Em inglês é o mesmo: I / me. Alemão e russo não inventaram nada — estenderam a TODOS os substantivos aquilo que o português faz com meia dúzia de pronomes. E estudar os dois juntos é a sua maior vantagem aqui: é a mesma ideia com duas roupas, e cada vez que você entende um caso alemão está entendendo o russo também.',
+      'Você já usa casos todos os dias, só que apenas nos pronomes: "eu" vira "me" e "mim" conforme a função ("eu vi", "me viu", "para mim"). Em inglês é o mesmo: I / me, he / him. O alemão não inventou nada — estendeu a TODOS os substantivos, pelo artigo, aquilo que o português e o inglês fazem com meia dúzia de pronomes. Quando travar no "den", lembre de "he" virando "him": é a mesma troca, só que agora vale para o cachorro e para o homem também.',
     trap: {
       wrong: 'Ich sehe der Mann.',
       right: 'Ich sehe den Mann.',
@@ -236,7 +236,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'Hablo tres idiomas.',
         de: 'Ich spreche drei Sprachen.',
         ru: 'Говорю на трёх языках.',
-        note: 'Português, espanhol e russo dispensam o pronome. Inglês e alemão não.',
+        note: 'O português dispensa o pronome, porque o verbo já diz quem fala. Inglês e alemão não.',
       },
       {
         gloss: 'está chovendo',
@@ -245,7 +245,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'Está lloviendo.',
         de: 'Es regnet.',
         ru: 'Идёт дождь.',
-        note: 'Aqui nem existe sujeito de verdade, mas inglês e alemão inventam um ("it", "es") só para preencher a vaga. O russo nem isso: literalmente "vai chuva".',
+        note: 'Aqui nem existe sujeito de verdade, mas inglês e alemão inventam um ("it", "es") só para preencher a vaga. O português nem isso: "está chovendo" não tem sujeito nenhum.',
       },
     ],
     trap: {
@@ -258,7 +258,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
   {
     id: 'gender',
     title: 'O gênero das palavras não combina entre os idiomas',
-    question: 'Se "ponte" é feminina em português, por que "el puente" é masculino?',
+    question: 'Se "menina" é feminina em português, por que "das Mädchen" é neutro?',
     targets: ['de', 'es', 'ru'],
     // Agrupado por TER ou nao ter genero, e nao por quantos generos: o que o
     // aluno precisa confirmar e a categoria ("substantivo carrega genero"), e
@@ -281,7 +281,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'el puente',
         de: 'die Brücke',
         ru: 'мост',
-        note: 'Feminina em português e alemão, masculina em espanhol e em russo. Não há lógica a extrair entre as línguas — há que aprender cada palavra já com o gênero.',
+        note: 'Feminina em português e em alemão — aqui as duas concordam, mas por acaso. Não há lógica a extrair entre as línguas — há que aprender cada palavra já com o gênero.',
       },
       {
         gloss: 'a menina',
@@ -290,13 +290,13 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'la niña',
         de: 'das Mädchen',
         ru: 'девочка',
-        note: 'Em alemão "menina" é NEUTRO: o diminutivo -chen neutraliza o gênero, mesmo contra o sentido. Em russo o -а entrega o feminino, e aqui a terminação e o sentido concordam.',
+        note: 'Em alemão "menina" é NEUTRO: o diminutivo -chen neutraliza o gênero, mesmo contra o sentido. O artigo segue a forma da palavra, não o sexo da pessoa.',
       },
     ],
     trap: {
-      wrong: 'la puente / el Brücke',
-      right: 'el puente / die Brücke',
-      why: 'O espanhol parece português o suficiente para você baixar a guarda — e é exatamente aí que o gênero troca. Aprenda todo substantivo já com o artigo colado.',
+      wrong: 'die Mond',
+      right: 'der Mond',
+      why: '"A lua" é feminina em português, e é fácil copiar o gênero de casa — mas em alemão a lua é masculina. Às vezes coincide (die Brücke), às vezes troca. Aprenda todo substantivo já com o artigo colado.',
     },
     level: 'A1',
   },
@@ -329,11 +329,11 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'Comí ayer.',
         de: 'Ich habe gestern gegessen.',
         ru: 'Вчера я поел.',
-        note: 'O inglês é obrigado a trocar para o simple past por causa do "yesterday". Alemão e russo não mudam nada.',
+        note: 'O inglês é obrigado a trocar para o simple past por causa do "yesterday". O alemão não muda nada: continua no Perfekt.',
       },
     ],
     bridge:
-      'Este é o tópico em que cada idioma se comporta de um jeito diferente — por isso ele confunde tanto. Mas a FORMA é a mesma em quatro deles: verbo auxiliar "ter/haver" + particípio (tenho comido / have eaten / he comido / habe gegessen). Você não precisa aprender a construir nada novo; precisa aprender só QUANDO cada língua a usa. Em inglês a régua é a consequência no presente, em espanhol é o período de tempo, em alemão não há régua nenhuma (é o passado falado padrão) e em português a forma foi sequestrada para significar hábito repetido. O russo fica fora dessa conta: ele não tem a forma, e resolve tudo pelo aspecto do verbo.',
+      'Este é o tópico em que cada idioma se comporta de um jeito diferente — por isso ele confunde tanto. Mas a FORMA é a mesma nos três: verbo auxiliar "ter" + particípio (tenho comido / have eaten / habe gegessen). Você não precisa aprender a construir nada novo; precisa aprender só QUANDO cada língua a usa. Em inglês a régua é a consequência no presente, em alemão não há régua nenhuma (é o passado falado padrão) e em português a forma foi sequestrada para significar hábito repetido.',
     trap: {
       wrong: 'I have eaten yesterday.',
       right: 'I ate yesterday.',
@@ -362,7 +362,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'Hoy voy al cine.',
         de: 'Heute gehe ich ins Kino.',
         ru: 'Сегодня я иду в кино.',
-        note: 'Em alemão, começar com "Heute" empurra o sujeito para depois do verbo: o verbo defende a segunda posição. Em russo começar por "Сегодня" não mexe em mais nada.',
+        note: 'Em alemão, começar com "Heute" empurra o sujeito para depois do verbo: o verbo defende a segunda posição. Em português e inglês começar por "hoje" não mexe em mais nada.',
       },
       {
         gloss: 'eu sei que ele vem hoje',
@@ -371,7 +371,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'Sé que él viene hoy.',
         de: 'Ich weiß, dass er heute kommt.',
         ru: 'Я знаю, что он сегодня придёт.',
-        note: 'Depois de "dass" o verbo alemão desce para o fim da oração. Depois de "что", em russo, não muda nada — igual ao português.',
+        note: 'Depois de "dass" o verbo alemão desce para o fim da oração. Depois de "que" ou "that", em português e inglês, não muda nada.',
       },
     ],
     bridge:
@@ -407,7 +407,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'No vi nada.',
         de: 'Ich habe nichts gesehen.',
         ru: 'Я ничего не видел.',
-        note: 'Português, espanhol e russo negam duas vezes. O inglês troca "nothing" por "anything" para negar uma vez só.',
+        note: 'O português nega duas vezes (não + nada). O inglês troca "nothing" por "anything" para negar uma vez só, e o alemão concentra tudo em "nichts".',
       },
       {
         gloss: 'eu não tenho carro',
@@ -416,7 +416,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'No tengo coche.',
         de: 'Ich habe kein Auto.',
         ru: 'У меня нет машины.',
-        note: 'Aqui o alemão usa "kein", não "nicht", porque o que está sendo negado é o substantivo. O russo muda a frase inteira: "нет" exige o genitivo (машины), e não há verbo "ter".',
+        note: 'Aqui o alemão usa "kein", não "nicht", porque o que está sendo negado é o substantivo. O inglês nega o verbo com "don\'t" e deixa o substantivo intacto.',
       },
     ],
     trap: {
@@ -459,13 +459,13 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'Tengo hambre.',
         de: 'Ich habe Hunger.',
         ru: 'Я голоден.',
-        note: 'E os blocos se invertem: para fome, o alemão volta para o lado do espanhol (TEM fome) e o russo vai para o lado do inglês (É faminto). Por isso não adianta decorar "alemão é como inglês" — o alinhamento muda de construção para construção.',
+        note: 'E os blocos se invertem: para fome, o alemão volta para o lado do português (TEM fome: "ich habe Hunger"), enquanto o inglês continua com o "ser" (I am hungry). Por isso não adianta decorar "alemão é como inglês" — o alinhamento muda de construção para construção.',
       },
     ],
     trap: {
       wrong: 'I have thirty years.',
       right: 'I am thirty.',
-      why: 'Vem direto de "tengo treinta años" e de "tenho trinta anos" — as duas línguas que você já tem na cabeça empurram para o mesmo erro. Em inglês a frase soa como se você possuísse trinta anos de alguma coisa.',
+      why: 'Vem direto de "tenho trinta anos" — a língua que você já tem na cabeça empurra para o erro. Em inglês a frase soa como se você possuísse trinta anos de alguma coisa.',
     },
     level: 'A1',
   },
@@ -490,7 +490,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'La vida es bella.',
         de: 'Das Leben ist schön.',
         ru: 'Жизнь прекрасна.',
-        note: 'O inglês é o único que solta o artigo aqui por REGRA. O russo solta porque não tem artigo para soltar.',
+        note: 'O inglês é o único que solta o artigo aqui por REGRA: português e alemão mantêm "a vida" / "das Leben".',
       },
       {
         gloss: 'eu gosto de música',
@@ -506,7 +506,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
     trap: {
       wrong: 'The life is beautiful.',
       right: 'Life is beautiful.',
-      why: 'Português, espanhol e alemão pedem o artigo, então três das línguas na sua cabeça votam pelo erro. Em inglês, "the life" só cabe quando é uma vida específica: "the life of a doctor".',
+      why: 'Português e alemão pedem o artigo, então duas das línguas na sua cabeça votam pelo erro. Em inglês, "the life" só cabe quando é uma vida específica: "the life of a doctor".',
     },
     level: 'A2',
   },
@@ -578,7 +578,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'Espero que venga.',
         de: 'Ich hoffe, dass er kommt.',
         ru: 'Надеюсь, что он придёт.',
-        note: 'Só português e espanhol mudam a forma do verbo. Inglês, alemão e russo usam o presente (ou o futuro) normal.',
+        note: 'Só o português muda a forma do verbo (venha). Inglês e alemão usam o presente normal.',
       },
       {
         gloss: 'se eu fosse rico',
@@ -587,7 +587,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'Si fuera rico...',
         de: 'Wenn ich reich wäre...',
         ru: 'Если бы я был богат...',
-        note: 'Aqui todos marcam a hipótese. É o último reduto do subjuntivo inglês — e em russo a marca é só a partícula "бы".',
+        note: 'Aqui todos marcam a hipótese. É o último reduto do subjuntivo inglês (were) — e o alemão tem o seu par (wäre).',
       },
     ],
     bridge:
@@ -631,7 +631,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'un coche rojo viejo',
         de: 'ein altes rotes Auto',
         ru: 'старая красная машина',
-        note: 'Inglês, alemão e russo empilham tudo antes; o inglês ainda cobra uma ordem fixa (idade antes de cor).',
+        note: 'Inglês e alemão empilham tudo antes; o inglês ainda cobra uma ordem fixa (idade antes de cor).',
       },
     ],
     trap: {
@@ -662,7 +662,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'los libros',
         de: 'die Bücher',
         ru: 'книги',
-        note: 'Buch vira Bücher: mudou a vogal E ganhou -er. Em russo книга vira книги, trocando a terminação.',
+        note: 'Buch vira Bücher: mudou a vogal E ganhou -er. Português e inglês só acrescentam -s.',
       },
       {
         gloss: 'as mulheres',
@@ -675,7 +675,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
       },
     ],
     bridge:
-      'O plural alemão parece caótico, mas o inglês guarda fósseis do mesmo sistema: man/men, foot/feet, goose/geese mudam a vogal exatamente como Buch/Bücher. As duas línguas herdaram isso da mesma origem germânica — o inglês perdeu quase todos os casos, o alemão manteve. Já o plural russo parece caótico por outro motivo: ele é regular, mas a regra depende de gênero, terminação e caso ao mesmo tempo. Em alemão você memoriza palavra por palavra; em russo você aprende o sistema uma vez.',
+      'O plural alemão parece caótico, mas o inglês guarda fósseis do mesmo sistema: man/men, foot/feet, goose/geese mudam a vogal exatamente como Buch/Bücher. As duas línguas herdaram isso da mesma origem germânica — o inglês perdeu quase todos os casos, o alemão manteve. Não há atalho: em alemão você memoriza palavra por palavra, já com o artigo e o plural juntos (das Buch, die Bücher).',
     level: 'A1',
   },
   {
@@ -699,7 +699,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'Estoy en la cocina.',
         de: 'Ich bin in der Küche.',
         ru: 'Я на кухне.',
-        note: 'Alemão em dativo (der) e russo em preposicional (кухне), os dois porque não há movimento.',
+        note: 'Alemão em dativo (in der Küche), porque não há movimento.',
       },
       {
         gloss: 'vou para a cozinha — movimento',
@@ -708,11 +708,11 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'Voy a la cocina.',
         de: 'Ich gehe in die Küche.',
         ru: 'Я иду на кухню.',
-        note: 'Mesma preposição, mas agora acusativo (die / кухню), porque há deslocamento. Alemão e russo cobram a mesma troca.',
+        note: 'Mesma preposição, mas agora acusativo (in die Küche), porque há deslocamento. O inglês troca a preposição (in → into); o alemão troca o caso.',
       },
     ],
     bridge:
-      'O inglês faz uma distinção parecida com in/into e on/onto: "I am in the kitchen" contra "I go into the kitchen". Alemão e russo pegam essa mesma ideia de parado x em movimento e, em vez de trocar a preposição, trocam o caso — e fazem isso do mesmo jeito, o que torna cada um dos dois um atalho para o outro.',
+      'O inglês faz uma distinção parecida com in/into e on/onto: "I am in the kitchen" contra "I go into the kitchen". O alemão pega essa mesma ideia de parado x em movimento e, em vez de trocar a preposição, troca o caso. Onde o inglês pediria "into", o alemão costuma pedir acusativo.',
     level: 'B1',
   },
   {
@@ -801,7 +801,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
   {
     id: 'motion-verbs',
     title: 'Ir a pé ou ir de carro',
-    question: 'Por que o russo me obriga a escolher como eu vou antes de dizer que vou?',
+    question: 'Por que o alemão me obriga a escolher como eu vou antes de dizer que vou?',
     targets: ['ru', 'de'],
     groups: [
       ['ru', 'de'],
@@ -809,7 +809,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
     ],
     behavior: {
       ru: 'O verbo de movimento já diz o meio: идти/ходить é a pé, ехать/ездить é em veículo. E ainda separa trajeto determinado (идти) de ida e volta ou hábito (ходить).',
-      de: 'Faz metade disso: "gehen" é a pé e "fahren" é de veículo. A escolha é obrigatória, como em russo.',
+      de: 'O verbo já diz o meio: "gehen" é a pé e "fahren" é de veículo. A escolha é obrigatória.',
       pt: 'Um verbo só, "ir", para tudo. O meio, se importar, vem depois numa preposição: "de ônibus".',
       es: 'Igual ao português: "ir" cobre tudo.',
       en: 'Igual: "to go" cobre tudo, e o meio vem em "by bus", "on foot".',
@@ -822,7 +822,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'Voy al trabajo en autobús.',
         de: 'Ich fahre mit dem Bus zur Arbeit.',
         ru: 'Я еду на работу на автобусе.',
-        note: 'Alemão e russo já escolheram o verbo de veículo (fahren, ехать) antes de mencionar o ônibus. Português, espanhol e inglês usam o verbo genérico e deixam o meio para o fim.',
+        note: 'O alemão já escolheu o verbo de veículo (fahren) antes de mencionar o ônibus. Português e inglês usam o verbo genérico e deixam o meio para o fim.',
       },
       {
         gloss: 'nós vamos ao cinema — a pé',
@@ -831,13 +831,15 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'Vamos al cine.',
         de: 'Wir gehen ins Kino.',
         ru: 'Мы идём в кино.',
-        note: 'Aqui os dois trocam para o verbo de andar (gehen, идти). Em português a frase é a mesma dos dois casos.',
+        note: 'Aqui o alemão troca para o verbo de andar (gehen). Em português a frase é a mesma dos dois casos.',
       },
     ],
+    bridge:
+      'Você já tem essa escolha em português e em inglês, só que opcional: dá para dizer "vou andando" ou "vou de carro", e o inglês tem "walk" e "drive" ao lado de "go". O alemão só tornou obrigatório o que nas outras duas é detalhe: todo deslocamento pede gehen (a pé) ou fahren (de veículo). Antes de dizer "vou", pergunte-se: vou andando ou vou em alguma coisa?',
     trap: {
-      wrong: 'Я иду в Москву. (querendo dizer "vou a Moscou")',
-      right: 'Я еду в Москву.',
-      why: '"Идти" é ir com os próprios pés. Dizer "иду в Москву" anuncia uma caminhada até Moscou. O alemão comete o mesmo deslize com "ich gehe nach Berlin".',
+      wrong: 'Ich gehe nach Berlin. (querendo dizer "vou de trem a Berlim")',
+      right: 'Ich fahre nach Berlin.',
+      why: '"Gehen" é ir com os próprios pés. Dizer "ich gehe nach Berlin" anuncia uma caminhada até Berlim. Trem, carro ou ônibus pedem "fahren".',
     },
     level: 'A2',
   },
@@ -873,7 +875,7 @@ export const CONTRAST_TOPICS: ContrastTopic[] = [
         es: 'Tengo que trabajar hoy.',
         de: 'Ich muss heute arbeiten.',
         ru: 'Мне нужно сегодня работать.',
-        note: 'No alemão, "arbeiten" foi para o fim, depois de "heute". O inglês mantém tudo junto. Em russo o infinitivo fica no fim como no alemão, mas por outro motivo: quem trabalha virou dativo e a frase ficou impessoal.',
+        note: 'No alemão, "arbeiten" foi para o fim, depois de "heute". Inglês e português mantêm o modal e o infinitivo juntos.',
       },
     ],
     trap: {
@@ -902,8 +904,14 @@ export interface Support {
 
 export function supportFor(topic: ContrastTopic, target: Lang): Support {
   const own = topic.groups.find((g) => g.includes(target)) ?? [target];
-  const retired = STUDY_LANGUAGES.filter((l) => !ACTIVE_LANGUAGES.includes(l));
-  const ranked = ([...ACTIVE_LANGUAGES, 'pt', ...retired] as Lang[]).filter((l) => l !== target);
+  /*
+   * So idiomas ativos e o portugues. Espanhol e russo ficaram de fora de vez:
+   * antes eles voltavam como contraste quando nenhum idioma ativo servia, e o
+   * aluno encontrava "o russo faz diferente" estudando so ingles e alemao.
+   * Sem idioma ativo que contraste, o contraste e o portugues; sem nenhum,
+   * fica null e a tela ja sabe lidar com isso.
+   */
+  const ranked = ([...ACTIVE_LANGUAGES, 'pt'] as Lang[]).filter((l) => l !== target);
 
   return {
     ally: ranked.find((l) => own.includes(l)) ?? null,

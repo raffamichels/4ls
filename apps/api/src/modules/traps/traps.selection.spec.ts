@@ -171,6 +171,20 @@ describe('rodada de armadilhas', () => {
     expect(round.every((i) => i.languageCode === 'ru')).toBe(true);
   });
 
+  it('deixa de fora armadilhas vindas de idioma que ele não estuda mais', () => {
+    const round = buildRound({
+      languageCode: 'de',
+      level: 'B1',
+      errors: [error({ languageCode: 'de', sourceCode: 'ru' })],
+      sources: ['ru', 'pt'],
+      allowedSources: ['pt', 'en', 'de'],
+      limit: 50,
+    });
+
+    expect(round.length).toBeGreaterThan(0);
+    expect(round.every((i) => ['pt', 'en', 'de'].includes(i.sourceCode))).toBe(true);
+  });
+
   it('respeita o tamanho da rodada', () => {
     const round = buildRound({ languageCode: 'de', level: 'B1', errors: [], sources: [], limit: 3 });
     expect(round).toHaveLength(3);

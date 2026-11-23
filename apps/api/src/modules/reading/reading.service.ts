@@ -235,8 +235,16 @@ export class ReadingService {
 
     for (const topic of wanted.values()) {
       const where = { topicId: topic.id, level };
-      const existing = await this.prisma.readingPassage.count({ where });
-      if (existing > 0) continue;
+      const pooled = await this.prisma.readingPassage.findMany({
+        where,
+        select: { versions: true },
+      });
+      const codes = languages.map((l) => l.code);
+      // Texto de antes da troca de idiomas nao conta: ele nao pode mais ser
+      // servido (ver `fromPool`).
+      if (pooled.some((r) => passageFitsLanguages(r.versions as unknown as ReadingVersion[], codes))) {
+        continue;
+      }
 
       const generated = await this.generate(userId, topic, languages);
       await this.prisma.readingPassage.create({
@@ -357,8 +365,9 @@ export class ReadingService {
     }
 
     const ideal = ranked[0];
+    const codes = languages.map((l) => l.code);
 
-    const ready = await this.fromPool(ideal, level);
+    const ready = await this.fromPool(ideal, level, codes);
     if (ready) return { topic: ideal, content: ready };
 
     try {
@@ -372,14 +381,17 @@ export class ReadingService {
 
     const rows = await this.prisma.readingPassage.findMany({
       where: { level, topicId: { in: ranked.map((t) => t.id) } },
-      select: { topicId: true },
-      distinct: ['topicId'],
+      select: { topicId: true, versions: true },
     });
-    const prepared = new Set(rows.map((r) => r.topicId));
+    const prepared = new Set(
+      rows
+        .filter((r) => passageFitsLanguages(r.versions as unknown as ReadingVersion[], codes))
+        .map((r) => r.topicId),
+    );
 
     for (const topic of ranked.slice(1)) {
       if (!prepared.has(topic.id)) continue;
-      const content = await this.fromPool(topic, level);
+      const content = await this.fromPool(topic, level, codes);
       if (content) return { topic, content };
     }
 
@@ -416,11 +428,20 @@ export class ReadingService {
     };
   }
 
-  private async fromPool(topic: ReadingTopic, level: string) {
-    const reused = await this.prisma.readingPassage.findFirst({
+  private async fromPool(topic: ReadingTopic, level: string, codes: string[]) {
+    /*
+     * O pool e chaveado por (texto, nivel), nao por idioma, e os textos
+     * gerados quando o aluno estudava quatro idiomas continuam la -- com as
+     * versoes em espanhol e russo e o paragrafo de contraste comparando os
+     * quatro. So serve o texto feito para EXATAMENTE os idiomas da matricula.
+     */
+    const rows = await this.prisma.readingPassage.findMany({
       where: { topicId: topic.id, level },
       orderBy: [{ timesUsed: 'asc' }, { lastUsedAt: 'asc' }],
     });
+    const reused = rows.find((r) =>
+      passageFitsLanguages(r.versions as unknown as ReadingVersion[], codes),
+    );
 
     // `null` quando nao ha nenhum: quem decide o que fazer e `serve()`.
     if (!reused) return null;
@@ -551,4 +572,14 @@ export function alignedPassage(
   if (counts.some((count) => count !== counts[0])) return false;
 
   return counts[0] >= Math.ceil(expected * MIN_SENTENCE_RATIO);
+}
+
+/** O texto foi feito para exatamente estes idiomas? Ver `lessonFitsLanguages`. */
+export function passageFitsLanguages(
+  versions: ReadingVersion[] | null | undefined,
+  codes: string[],
+): boolean {
+  if (!Array.isArray(versions) || versions.length === 0) return false;
+  const got = [...new Set(versions.map((v) => v?.languageCode).filter(Boolean))].sort().join(',');
+  return got === [...new Set(codes)].sort().join(',');
 }

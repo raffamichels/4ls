@@ -45,7 +45,7 @@ export const SENTENCE_PATTERNS: SentencePattern[] = [
     behavior:
       'O ingles marca a funcao pela POSICAO, nao pela forma da palavra: sujeito, verbo, objeto, nessa ordem, sempre. O sujeito e obrigatorio mesmo quando nao existe ninguem agindo ("it is raining"). O adverbio de tempo vai para o inicio ou para o fim da frase, nunca entre o verbo e o objeto.',
     contrast:
-      'Portugues e espanhol movem elementos por enfase e ainda podem omitir o sujeito, porque a terminacao do verbo diz quem fala. O alemao fixa o verbo na 2a posicao e deixa o resto se mover. O russo tem a ordem mais livre dos quatro, porque a terminacao do substantivo marca a funcao -- justamente o que o ingles perdeu.',
+      'O portugues move elementos por enfase e ainda pode omitir o sujeito, porque a terminacao do verbo diz quem fala. O alemao fixa o verbo na 2a posicao e deixa o resto se mover, porque marca a funcao das palavras com casos. O ingles perdeu os casos -- e por isso so a ORDEM diz quem faz o que.',
     level: 'A1',
   },
   {
@@ -56,7 +56,7 @@ export const SENTENCE_PATTERNS: SentencePattern[] = [
     behavior:
       'A pergunta em ingles se constroi com auxiliar + sujeito + verbo principal no infinitivo sem "to": "Do you work here?". O auxiliar (do/does/did) carrega o tempo e a pessoa, entao o verbo principal fica na forma nua. Com "be" e com modais nao ha auxiliar extra: o proprio verbo pula na frente do sujeito.',
     contrast:
-      'Portugues e espanhol perguntam so pela entonacao ("Voce trabalha aqui?"). O alemao inverte sujeito e verbo, sem auxiliar ("Arbeitest du hier?"). O russo tambem nao usa auxiliar nenhum -- basta a entonacao ou a particula "ли". O ingles esta sozinho neste ponto entre os quatro.',
+      'O portugues pergunta so pela entonacao ("Voce trabalha aqui?"). O alemao inverte sujeito e verbo, sem auxiliar ("Arbeitest du hier?"). O ingles esta sozinho neste ponto: ele precisa de um auxiliar (do, does, did) que nao existe nos outros dois.',
     level: 'A1',
   },
   {
@@ -67,7 +67,7 @@ export const SENTENCE_PATTERNS: SentencePattern[] = [
     behavior:
       'O adjetivo vem sempre ANTES do substantivo, e quando ha varios a ordem e fixa: opiniao, tamanho, idade, forma, cor, origem, material. "a nice big old round red Italian wooden table". Nao ha virgula entre adjetivos de categorias diferentes.',
     contrast:
-      'Portugues e espanhol poem o adjetivo depois ("mesa vermelha") e a ordem entre varios e bem mais livre. O alemao tambem poe antes, mas ainda declina cada adjetivo por genero, numero e caso. O russo poe antes e tambem concorda em genero, numero e caso.',
+      'O portugues poe o adjetivo depois ("mesa vermelha") e a ordem entre varios e bem mais livre. O alemao tambem poe antes, como o ingles, mas ainda declina cada adjetivo por genero, numero e caso -- o ingles nao muda a forma nunca.',
     level: 'A2',
   },
   {
@@ -78,7 +78,7 @@ export const SENTENCE_PATTERNS: SentencePattern[] = [
     behavior:
       'A ordem padrao dos adjuntos em ingles e MODO, LUGAR, TEMPO -- nessa sequencia, depois do objeto: "She spoke quietly in the office yesterday." O adjunto de tempo tambem pode abrir a frase, para dar enfase. O que nao se faz e separar o verbo do objeto direto com um adjunto.',
     contrast:
-      'O alemao usa a ordem oposta na parte central da frase -- tempo, causa, modo, lugar (TeKaMoLo) --, e e daqui que vem metade dos erros de quem estuda os dois. Portugues e espanhol sao flexiveis. O russo tende a por o tempo no comeco.',
+      'O alemao usa a ordem oposta na parte central da frase -- tempo, causa, modo, lugar (TeKaMoLo) --, e e daqui que vem metade dos erros de quem estuda os dois. O portugues e flexivel e nao cobra ordem nenhuma.',
     level: 'B1',
   },
 
@@ -137,7 +137,7 @@ export const SENTENCE_PATTERNS: SentencePattern[] = [
     behavior:
       'Na frase principal alema o verbo conjugado e SEMPRE o segundo elemento -- nao a segunda palavra, o segundo constituinte. Se algo diferente do sujeito abre a frase (tempo, lugar, um complemento inteiro), o sujeito passa para depois do verbo: "Heute gehe ich ins Kino."',
     contrast:
-      'Portugues, espanhol e russo deixam voce comecar por onde quiser sem mexer no resto. O ingles guarda um resto da mesma regra em casos raros ("Never have I seen that"), mas na frase comum mantem sujeito-verbo. O alemao esta praticamente sozinho, e e por isso que este e o erro numero um de brasileiros.',
+      'O portugues deixa voce comecar por onde quiser sem mexer no resto. O ingles guarda um resto da mesma regra em casos raros ("Never have I seen that"), mas na frase comum mantem sujeito-verbo. O alemao esta sozinho, e e por isso que este e o erro numero um de brasileiros.',
     level: 'A1',
   },
   {
@@ -148,7 +148,7 @@ export const SENTENCE_PATTERNS: SentencePattern[] = [
     behavior:
       'O artigo e o adjetivo mudam de forma conforme a funcao do substantivo: nominativo para o sujeito, acusativo para o objeto direto, dativo para o objeto indireto, genitivo para posse. Verbos e preposicoes especificos exigem um caso fixo, e isso se aprende junto com a palavra, nao depois.',
     contrast:
-      'O russo funciona exatamente assim, com seis casos em vez de quatro -- estudar os dois ao mesmo tempo e a sua maior vantagem aqui. Portugues, espanhol e ingles marcam a funcao pela posicao e so guardam caso nos pronomes ("eu/me/mim", "I/me").',
+      'Portugues e ingles marcam a funcao pela posicao e so guardam caso nos pronomes ("eu/me/mim", "I/me"). E justamente por ai que vale entrar: o "me" do ingles e o "mich/mir" do alemao sao a mesma ideia -- o alemao so estende ao artigo o que os outros dois fazem no pronome.',
     level: 'A1',
   },
   {
@@ -159,7 +159,7 @@ export const SENTENCE_PATTERNS: SentencePattern[] = [
     behavior:
       'Conjuncoes subordinativas (weil, dass, wenn, obwohl, ob) mandam o verbo conjugado para o FIM da oracao: "Ich bleibe zu Hause, weil ich krank bin." A virgula antes da oracao e obrigatoria. Ja "denn" e "und" nao sao subordinativas e nao mexem na ordem.',
     contrast:
-      'Nenhum dos outros tres faz isto: ingles, espanhol e russo mantem a ordem normal depois de "because", "porque" e "потому что". E uma regra que voce so tem em alemao, e ela precisa ser pensada ANTES de comecar a oracao.',
+      'Nem o ingles nem o portugues fazem isto: os dois mantem a ordem normal depois de "because" e "porque". E uma regra que voce so tem em alemao, e ela precisa ser pensada ANTES de comecar a oracao.',
     level: 'A2',
   },
   {
@@ -170,7 +170,7 @@ export const SENTENCE_PATTERNS: SentencePattern[] = [
     behavior:
       'Modal, auxiliar ou verbo separavel abrem um PARENTESE: a parte conjugada fica na 2a posicao e a outra metade (infinitivo, participio ou prefixo separavel) fecha a frase no fim. Tudo o mais fica espremido no meio: "Ich muss heute frueh nach Hause gehen."',
     contrast:
-      'O ingles mantem os dois verbos juntos ("I must go home early today") e so parte os phrasal verbs quando o objeto e pronome ("turn it on"). Portugues e espanhol tambem mantem juntos. O russo nao tem esta construcao. A frase alema so fica pronta quando voce chega ao fim -- e isso muda o jeito de planejar a fala.',
+      'O ingles mantem os dois verbos juntos ("I must go home early today") e so parte os phrasal verbs quando o objeto e pronome ("turn it on"). O portugues tambem mantem juntos. A frase alema so fica pronta quando voce chega ao fim -- e isso muda o jeito de planejar a fala.',
     level: 'A2',
   },
   {
@@ -181,7 +181,7 @@ export const SENTENCE_PATTERNS: SentencePattern[] = [
     behavior:
       'No campo central a ordem padrao e TEmpo, KAusa, MOdo, LOcal: "Ich fahre morgen wegen der Arbeit mit dem Zug nach Berlin." Objeto dativo vem antes do acusativo quando os dois sao substantivos; se um deles for pronome, o pronome vem primeiro.',
     contrast:
-      'O ingles usa quase a ordem inversa -- modo, lugar, tempo --, e trocar as duas e o erro classico de quem estuda os dois juntos. Portugues e espanhol sao flexiveis e nao cobram nada. O russo prefere o tempo no inicio, o que casa com o "Te" do alemao.',
+      'O ingles usa quase a ordem inversa -- modo, lugar, tempo --, e trocar as duas e o erro classico de quem estuda os dois juntos. O portugues e flexivel e nao cobra nada.',
     level: 'B1',
   },
 

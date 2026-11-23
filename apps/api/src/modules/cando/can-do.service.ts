@@ -99,6 +99,7 @@ export class CanDoService {
    */
   async today(userId: string) {
     const { languages, level } = await this.learner(userId);
+    const codes = languages.map((l) => l.code);
     const candidates = canDoCandidates(languages.map((l) => l.level));
 
     if (candidates.length === 0) {
@@ -116,7 +117,12 @@ export class CanDoService {
       level,
       /** As colunas sao as mesmas nos quatro idiomas: a ordem e que muda. */
       columns: canDo.columns,
-      notes: canDo.notes,
+      /*
+       * O catalogo ainda descreve os quatro idiomas de antes (o conteudo de
+       * espanhol e russo ficou guardado). Na tela so entra o que o aluno
+       * estuda hoje.
+       */
+      notes: canDo.notes.filter((n) => codes.includes(n.languageCode)),
       languages: languages.map((l) => ({
         code: l.code,
         name: l.name,
@@ -147,8 +153,9 @@ export class CanDoService {
     }
 
     const ideal = ranked[0];
+    const codes = languages.map((l) => l.code);
 
-    const ready = await this.fromPool(ideal, level);
+    const ready = await this.fromPool(ideal, level, codes);
     if (ready) return { canDo: ideal, content: ready };
 
     try {
@@ -160,10 +167,10 @@ export class CanDoService {
       );
     }
 
-    const prepared = await this.preparedIds(ranked, level);
+    const prepared = await this.preparedIds(ranked, level, codes);
     for (const canDo of ranked.slice(1)) {
       if (!prepared.has(canDo.id)) continue;
-      const content = await this.fromPool(canDo, level);
+      const content = await this.fromPool(canDo, level, codes);
       if (content) return { canDo, content };
     }
 
@@ -201,17 +208,24 @@ export class CanDoService {
     };
   }
 
-  /** Quais destas can-dos ja tem pelo menos uma aula no pool. */
-  private async preparedIds(canDos: CanDo[], level: string): Promise<Set<string>> {
+  /** Quais destas can-dos ja tem pelo menos uma aula no pool, para estes idiomas. */
+  private async preparedIds(
+    canDos: CanDo[],
+    level: string,
+    codes: string[],
+  ): Promise<Set<string>> {
     if (canDos.length === 0) return new Set();
 
     const rows = await this.prisma.canDoLesson.findMany({
       where: { level, canDoId: { in: canDos.map((c) => c.id) } },
-      select: { canDoId: true },
-      distinct: ['canDoId'],
+      select: { canDoId: true, sentences: true },
     });
 
-    return new Set(rows.map((r) => r.canDoId));
+    return new Set(
+      rows
+        .filter((r) => lessonFitsLanguages(r.sentences as unknown as CanDoSentence[], codes))
+        .map((r) => r.canDoId),
+    );
   }
 
   /**
@@ -237,7 +251,7 @@ export class CanDoService {
 
     const rows = await this.progressRows(userId, candidates);
     const ranked = rankCanDos(candidates, rows, languages.length);
-    const prepared = await this.preparedIds(ranked, level);
+    const prepared = await this.preparedIds(ranked, level, languages.map((l) => l.code));
 
     const missing = ranked.filter((c) => !prepared.has(c.id));
     let created = 0;
@@ -262,7 +276,13 @@ export class CanDoService {
     target: number,
   ): Promise<number> {
     const where = { canDoId: canDo.id, level };
-    const existing = await this.prisma.canDoLesson.count({ where });
+    const codes = languages.map((l) => l.code);
+    const pooled = await this.prisma.canDoLesson.findMany({ where, select: { sentences: true } });
+    // Aula de antes da troca de idiomas fica no banco mas nao conta: ela nao
+    // pode mais ser servida, entao o pool desta matricula precisa da sua.
+    const existing = pooled.filter((r) =>
+      lessonFitsLanguages(r.sentences as unknown as CanDoSentence[], codes),
+    ).length;
     let created = 0;
 
     for (let i = existing; i < target; i += 1) {
@@ -368,11 +388,21 @@ export class CanDoService {
    * Basta UMA para servir. `null` quando nao ha nenhuma -- quem decide o que
    * fazer com a ausencia e `serve()`.
    */
-  private async fromPool(canDo: CanDo, level: string) {
-    const reused = await this.prisma.canDoLesson.findFirst({
+  private async fromPool(canDo: CanDo, level: string, codes: string[]) {
+    /*
+     * O pool e chaveado por (can-do, nivel), nao por idioma -- e as aulas
+     * geradas quando o aluno estudava quatro idiomas continuam la, com
+     * espanhol e russo nas frases e no paragrafo de contraste. Sem este
+     * filtro, elas voltavam para a tela. So serve a aula feita para EXATAMENTE
+     * os idiomas da matricula; nao havendo, `serve()` gera uma nova.
+     */
+    const rows = await this.prisma.canDoLesson.findMany({
       where: { canDoId: canDo.id, level },
       orderBy: [{ timesUsed: 'asc' }, { lastUsedAt: 'asc' }],
     });
+    const reused = rows.find((r) =>
+      lessonFitsLanguages(r.sentences as unknown as CanDoSentence[], codes),
+    );
 
     if (!reused) return null;
 
@@ -515,4 +545,28 @@ function compact(text: string): string {
     .replace(/[.,!?;:"'¿¡«»—-]/g, '')
     .replace(/\s+/g, '')
     .trim();
+}
+
+/**
+ * A aula foi feita para exatamente estes idiomas?
+ *
+ * Toda frase precisa ter uma realizacao em cada idioma da matricula e nenhuma
+ * em idioma fora dela. Uma aula com idioma a mais nao serve "filtrada": o
+ * paragrafo de contraste foi escrito comparando os quatro e continuaria
+ * falando de espanhol e russo.
+ */
+export function lessonFitsLanguages(
+  sentences: CanDoSentence[] | null | undefined,
+  codes: string[],
+): boolean {
+  if (!Array.isArray(sentences) || sentences.length === 0) return false;
+  const wanted = [...new Set(codes)].sort().join(',');
+  return sentences.every((sentence) => {
+    const got = [
+      ...new Set((sentence?.realizations ?? []).map((r) => r?.languageCode).filter(Boolean)),
+    ]
+      .sort()
+      .join(',');
+    return got === wanted;
+  });
 }
